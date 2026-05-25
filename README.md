@@ -25,7 +25,7 @@ Defining functions, return, default arguments, *args, **kwargs
 Exercise: Write a function to check palindrome or anagram
 
 ## Week 3–4: Intermediate
-Day 8: File Handling & Exception Handling
+# Day 8: File Handling & Exception Handling- https://fedexdilip-01.github.io/python/pday7.html
 Read/write files (.txt, .csv)
 try, except, finally, custom exceptions
 Project: Simple log file analyzer
