@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Python Day 7: String Manipulation & Functions | f-strings, Methods, Functions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f8fafd 0%, #eef2f7 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: #1a2c3e;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            background: linear-gradient(135deg, #1f5e7e, #0e3a4a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #2c5368;
+            background: rgba(255, 255, 245, 0.85);
+            backdrop-filter: blur(2px);
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 1.8rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 40px -14px rgba(0, 0, 0, 0.18);
+        }
+
+        .card-header {
+            background: #1f3b4c;
+            color: white;
+            padding: 1.2rem 1.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-header span {
+            font-size: 1.6rem;
+        }
+
+        .card-body {
+            padding: 1.6rem;
+        }
+
+        .what-why-where {
+            background: #eef3fa;
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
+            border-left: 4px solid #2c7da0;
+        }
+
+        .what-why-where strong {
+            color: #1f5e7e;
+        }
+
+        pre {
+            background: #0e1e2a;
+            color: #e2f0fa;
+            padding: 1rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: #eef2f5;
+            padding: 0.2rem 0.45rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #c7254e;
+        }
+
+        .example-title {
+            font-weight: 700;
+            margin: 1rem 0 0.3rem 0;
+            color: #0f3b4c;
+            border-left: 3px solid #2c7da0;
+            padding-left: 0.7rem;
+        }
+
+        .output-demo {
+            background: #f0f4f9;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-top: 0.8rem;
+            font-family: monospace;
+            border: 1px dashed #bdd4e7;
+            color: #1f4e6e;
+        }
+
+        .btn-run {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-run:hover {
+            background: #1f5e7e;
+            transform: scale(0.97);
+        }
+
+        .interactive-area {
+            background: linear-gradient(135deg, #ffffff, #fafdff);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            margin: 2rem 0 1rem;
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.08);
+            border: 1px solid #cde3f0;
+        }
+
+        .function-demo {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .string-tool {
+            background: #eef3fc;
+            border-radius: 1.2rem;
+            padding: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #3d6b8c;
+            font-size: 0.85rem;
+            border-top: 1px solid #cbdde9;
+            padding-top: 2rem;
+        }
+
+        input, textarea {
+            font-family: 'Fira Code', monospace;
+            border: 1px solid #cbdde9;
+            border-radius: 1rem;
+            padding: 0.6rem 1rem;
+            width: 100%;
+            resize: vertical;
+        }
+
+        .flex-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🔤 Day 7: String Methods · f-strings · Functions</h1>
+        <p>String manipulation | .format() | def, return, default arguments | 🧪 Live demos</p>
+    </div>
+
+    <!-- Grid: Strings & Functions concepts -->
+    <div class="grid">
+        <div class="card">
+            <div class="card-header"><span>📝</span> String Methods & Formatting</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — String methods: <code>.upper()</code>, <code>.lower()</code>, <code>.strip()</code>, <code>.replace()</code>, <code>.split()</code>, <code>.join()</code>.<br>
+                    <strong>💡 WHY</strong> — Clean and transform text data, parse user input, format outputs.<br>
+                    <strong>📍 WHERE</strong> — Data cleaning, logging, formatters, text analysis.
+                </div>
+                <div class="example-title">✨ f-strings (Python 3.6+)</div>
+                <pre><code>name = "Alice"
+score = 95
+print(f"Hello {name}, your score is {score}%")</code></pre>
+                <div class="example-title">⚙️ .format() method</div>
+                <pre><code>print("Hello {}, your score is {}".format(name, score))</code></pre>
+                <div class="output-demo">🎯 <strong>Useful methods:</strong> <code>" hello ".strip()</code> → "hello"<br>
+                <code>"python,java".split(",")</code> → ['python','java']</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>⚙️</span> Defining Functions · return · Default Args</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — <code>def func_name(params):</code> , <code>return value</code>, default arguments: <code>def greet(name="User")</code>.<br>
+                    <strong>💡 WHY</strong> — Reusability, modular code, reduce duplication, better organization.<br>
+                    <strong>📍 WHERE</strong> — Libraries, scripts, data pipelines, web apps.
+                </div>
+                <pre><code>def multiply(a, b=2):
+    """Multiply a by b (default 2)"""
+    return a * b
+
+print(multiply(5))   # 10
+print(multiply(5, 3))  # 15</code></pre>
+                <div class="output-demo">📌 Functions can return any type: int, str, list, bool, None.</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>🧩</span> Combining Strings & Functions</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Use functions to encapsulate string logic (validation, formatting).<br>
+                    <strong>💡 WHY</strong> — Build clean text processors, reusable formatters.<br>
+                    <strong>📍 WHERE</strong> — Email templates, slug generation, data sanitization.
+                </div>
+                <pre><code>def clean_name(name, default="Anonymous"):
+    cleaned = name.strip().title()
+    return cleaned if cleaned else default
+
+print(clean_name("  john doe  "))  # John Doe</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- TWO COMPLETE EXAMPLES with What/Why/How/Where -->
+    <div style="margin-bottom: 2rem;">
+        <div class="card" style="margin-bottom: 1.8rem;">
+            <div class="card-header"><span>📘 EXAMPLE 1</span> — Email Formatter (string methods + function + default args)</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Function that formats a user's full name into a professional email signature.<br>
+                    <strong>💡 WHY</strong> — Showcases string methods (<code>strip</code>, <code>title</code>), f-strings, default arguments.<br>
+                    <strong>📍 WHERE</strong> — Automated email systems, user profile generation.<br>
+                    <strong>⚙️ HOW</strong> — Takes name, optional role & company, returns formatted signature block.
+                </div>
+                <pre><code>def email_signature(name, role="Developer", company="TechCorp"):
+    clean_name = name.strip().title()
+    return f"""
+    📧 {clean_name}
+    💼 {role} @ {company}
+    📌 "Code with Python!"
+    """
+
+# Usage
+print(email_signature("  john smith  "))
+print(email_signature("alice wu", "Data Scientist", "AI Labs"))</code></pre>
+                <button class="btn-run" id="runEmailDemo">▶ Run Email Signature Example</button>
+                <div id="emailOutput" class="output-demo" style="margin-top: 12px;">💡 Click to see formatted signatures with default & custom args</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>📘 EXAMPLE 2</span> — String Analyzer: vowels, palindrome check (functions + methods)</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Multi-function module that analyzes text: count vowels, check palindrome, reverse string.<br>
+                    <strong>💡 WHY</strong> — Demos reusability, string methods, return values, and chaining.<br>
+                    <strong>📍 WHERE</strong> — Text analysis tools, word games, data validation.<br>
+                    <strong>⚙️ HOW</strong> — Functions with string methods <code>.lower()</code>, <code>.replace()</code> and loops.
+                </div>
+                <pre><code>def count_vowels(text):
+    vowels = "aeiou"
+    return sum(1 for ch in text.lower() if ch in vowels)
+
+def is_palindrome(text):
+    cleaned = text.replace(" ", "").lower()
+    return cleaned == cleaned[::-1]
+
+def analyze_text(text):
+    return {
+        "original": text,
+        "vowels": count_vowels(text),
+        "palindrome": is_palindrome(text),
+        "reversed": text[::-1]
+    }
+
+# Test
+result = analyze_text("A man a plan a canal panama")
+print(result)</code></pre>
+                <button class="btn-run" id="runTextAnalyzerDemo">▶ Run Text Analyzer</button>
+                <div id="analyzerOutput" class="output-demo" style="margin-top: 12px;">💡 Click to analyze sample phrase "A man a plan a canal panama"</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTERACTIVE PLAYGROUND: String & Function Live Demo -->
+    <div class="interactive-area">
+        <h2 style="margin-bottom: 1rem; display: flex; gap: 0.5rem;">🧪 Live Lab: String + Function Playground</h2>
+        <div class="function-demo">
+            <div class="string-tool">
+                <label><strong>✏️ Your text / name:</strong></label>
+                <input type="text" id="liveTextInput" placeholder="e.g.,  hello world!   or  Python is FUN" value="  Python Programming  ">
+                <div class="flex-buttons" style="margin-top: 0.8rem;">
+                    <button id="btnFormatName" class="btn-run">🎨 Format Name (title & strip)</button>
+                    <button id="btnAnalyzeVowels" class="btn-run">🔠 Count Vowels</button>
+                    <button id="btnPalindromeCheck" class="btn-run">🔄 Check Palindrome</button>
+                    <button id="btnReverseStr" class="btn-run">🔁 Reverse String</button>
+                </div>
+                <div id="liveResult" class="output-demo" style="margin-top: 1rem; background: #e2f0f5;">
+                    💡 Results will appear here...
+                </div>
+            </div>
+            <div class="string-tool">
+                <label><strong>📦 Custom Greeting Function (default args):</strong></label>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;">
+                    <input type="text" id="greetName" placeholder="Your name" value="Alex">
+                    <input type="text" id="greetTitle" placeholder="Title (optional)" value="Pythonista">
+                </div>
+                <button id="btnGreet" class="btn-run" style="margin-top: 8px;">👋 Generate Greeting (f-string + function)</button>
+                <div id="greetingResult" class="output-demo" style="margin-top: 1rem;">✨ Custom greeting will appear here</div>
+            </div>
+        </div>
+        <div style="margin-top: 1rem; font-size: 0.85rem; background: #eef3fc; border-radius: 1rem; padding: 0.7rem 1rem;">
+            💡 <strong>What · Why · How:</strong> This interactive box uses <strong>string methods</strong> (<code>.strip()</code>, <code>.title()</code>, <code>.lower()</code>, slicing) 
+            and <strong>functions</strong> with default arguments. Every click calls a Python-like JS function demonstrating exactly the same concepts.
+        </div>
+    </div>
+
+    <footer>
+        🐍 Day 7: String manipulation (methods, slicing, f-strings, .format()) + Functions (def, return, default args)<br>
+        📌 Full examples + Live interactive string/function lab — master text processing and reusable code.
+    </footer>
+</div>
+
+<script>
+    // Helper: escape HTML for safe output
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    // ---- EXAMPLE 1: Email signature demo ----
+    document.getElementById("runEmailDemo").addEventListener("click", () => {
+        function emailSignature(name, role = "Developer", company = "TechCorp") {
+            const cleanName = name.trim().replace(/\s+/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+            return `📧 ${cleanName}\n💼 ${role} @ ${company}\n📌 "Code with Python!"`;
+        }
+        const sig1 = emailSignature("  john smith  ");
+        const sig2 = emailSignature("alice wu", "Data Scientist", "AI Labs");
+        const output = `✨ Signature 1 (default role/company):\n${sig1}\n\n✨ Signature 2 (custom args):\n${sig2}`;
+        document.getElementById("emailOutput").innerHTML = `<strong>▶ Email Signature Output:</strong><br><pre style="background:#0e1e2a;color:#e2f0fa;border-radius:12px;padding:12px;">${escapeHtml(output)}</pre>`;
+    });
+
+    // ---- EXAMPLE 2: Text analyzer (vowels, palindrome, reverse) ----
+    document.getElementById("runTextAnalyzerDemo").addEventListener("click", () => {
+        function countVowels(text) {
+            const vowels = "aeiou";
+            return Array.from(text.toLowerCase()).filter(ch => vowels.includes(ch)).length;
+        }
+        function isPalindrome(text) {
+            const cleaned = text.replace(/\s+/g, '').toLowerCase();
+            return cleaned === cleaned.split('').reverse().join('');
+        }
+        function analyzeText(text) {
+            return {
+                original: text,
+                vowels: countVowels(text),
+                palindrome: isPalindrome(text),
+                reversed: text.split('').reverse().join('')
+            };
+        }
+        const sample = "A man a plan a canal panama";
+        const analysis = analyzeText(sample);
+        const resultStr = `📝 Original: "${analysis.original}"\n🔤 Vowels count: ${analysis.vowels}\n🔄 Palindrome? ${analysis.palindrome}\n🔁 Reversed: "${analysis.reversed}"\n\n💡 Functions used: .lower(), .replace(), slicing [::-1], list comprehension.`;
+        document.getElementById("analyzerOutput").innerHTML = `<strong>▶ String Analyzer Result:</strong><br><pre style="background:#0e1e2a;color:#e2f0fa;border-radius:12px;padding:12px;">${escapeHtml(resultStr)}</pre>`;
+    });
+
+    // ---- INTERACTIVE LIVE LAB functions (mimic Python string methods & functions) ----
+    const liveInput = document.getElementById("liveTextInput");
+    const liveResultDiv = document.getElementById("liveResult");
+
+    function formatNameTitle() {
+        let raw = liveInput.value;
+        let formatted = raw.trim().replace(/\s+/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+        liveResultDiv.innerHTML = `<strong>✨ .strip() + .title() simulation:</strong><br> Input: "${escapeHtml(raw)}"<br> → Formatted Name: "${escapeHtml(formatted)}"<br><span style="font-size:0.8rem;">(Using trim, title case, clean spaces)</span>`;
+    }
+    function analyzeVowels() {
+        let text = liveInput.value;
+        let lowerText = text.toLowerCase();
+        let vowels = "aeiou";
+        let count = 0;
+        for(let ch of lowerText) {
+            if(vowels.includes(ch)) count++;
+        }
+        liveResultDiv.innerHTML = `<strong>🔠 Count Vowels (function + .lower()):</strong><br> Text: "${escapeHtml(text)}"<br> → Vowels count: ${count}<br><span style="font-size:0.8rem;">(Case-insensitive, loops through characters)</span>`;
+    }
+    function checkPalindrome() {
+        let text = liveInput.value;
+        let cleaned = text.replace(/\s+/g, '').toLowerCase();
+        let reversed = cleaned.split('').reverse().join('');
+        let isPal = (cleaned === reversed);
+        liveResultDiv.innerHTML = `<strong>🔄 Palindrome Check:</strong><br> Original: "${escapeHtml(text)}"<br> Cleaned (no spaces, lowercase): "${escapeHtml(cleaned)}"<br> Reversed: "${escapeHtml(reversed)}"<br> ✅ Is palindrome? ${isPal}<br><span style="font-size:0.8rem;">(Using .replace(), .lower(), slicing)</span>`;
+    }
+    function reverseStringDemo() {
+        let text = liveInput.value;
+        let reversed = text.split('').reverse().join('');
+        liveResultDiv.innerHTML = `<strong>🔁 Reverse String:</strong><br> Input: "${escapeHtml(text)}"<br> Reversed: "${escapeHtml(reversed)}"<br><span style="font-size:0.8rem;">(Slicing simulation via split/reverse/join)</span>`;
+    }
+
+    document.getElementById("btnFormatName").addEventListener("click", formatNameTitle);
+    document.getElementById("btnAnalyzeVowels").addEventListener("click", analyzeVowels);
+    document.getElementById("btnPalindromeCheck").addEventListener("click", checkPalindrome);
+    document.getElementById("btnReverseStr").addEventListener("click", reverseStringDemo);
+
+    // Custom Greeting Function (default args demo)
+    function createGreeting(name, title = "Enthusiast") {
+        const cleanName = name.trim();
+        if(cleanName === "") return "Hello, curious coder! Please enter a name.";
+        return `👋 Hello, ${cleanName}! ${title ? `As a ${title}, you'll master Python.` : "Keep coding!"} 🚀`;
+    }
+
+    document.getElementById("btnGreet").addEventListener("click", () => {
+        let nameField = document.getElementById("greetName").value;
+        let titleField = document.getElementById("greetTitle").value;
+        let greeting = createGreeting(nameField, titleField || undefined);
+        document.getElementById("greetingResult").innerHTML = `<strong>🎤 Function with default argument:</strong><br>${escapeHtml(greeting)}<br><span style="font-size:0.8rem;">def create_greeting(name, title="Enthusiast") — f-string formatting</span>`;
+    });
+
+    // Additional small output: show formatting for initial load
+    setTimeout(() => {
+        formatNameTitle();
+    }, 100);
+</script>
+</body>
+</html>
