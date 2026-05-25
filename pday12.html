@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Day 12: OOP in Python | Classes, Inheritance, Polymorphism | Bank Account System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f4fa 0%, #e8edf3 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: #1a2c3e;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #1f5e7e, #0e4b63);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: #2c5368;
+            background: rgba(255, 255, 250, 0.85);
+            backdrop-filter: blur(2px);
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 1.8rem;
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 22px 35px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: #1f3b4c;
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-header span {
+            font-size: 1.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .what-why-where {
+            background: #eef3fa;
+            border-radius: 1.2rem;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            border-left: 4px solid #2c7da0;
+        }
+
+        .what-why-where strong {
+            color: #1f5e7e;
+        }
+
+        pre {
+            background: #0e1e2a;
+            color: #e2f0fa;
+            padding: 1rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: #eef2f5;
+            padding: 0.2rem 0.45rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #c7254e;
+        }
+
+        .example-title {
+            font-weight: 700;
+            margin: 1rem 0 0.3rem 0;
+            color: #0f3b4c;
+            border-left: 3px solid #2c7da0;
+            padding-left: 0.7rem;
+        }
+
+        .output-demo {
+            background: #f0f4f9;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-top: 0.8rem;
+            font-family: monospace;
+            border: 1px dashed #bdd4e7;
+            color: #1f4e6e;
+            font-size: 0.85rem;
+        }
+
+        .btn-run {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-run:hover {
+            background: #1f5e7e;
+            transform: scale(0.97);
+        }
+
+        .project-box {
+            background: linear-gradient(135deg, #ffffff, #fefefe);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            margin: 2rem 0 1rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #cde3f0;
+        }
+
+        .bank-interface {
+            background: #f7fafd;
+            border-radius: 1.4rem;
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .account-card {
+            background: linear-gradient(135deg, #1f3b4c, #1a2f3e);
+            color: white;
+            border-radius: 1.2rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .bank-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 1rem 0;
+        }
+
+        .bank-btn {
+            background: #2c7da0;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .bank-btn:hover {
+            background: #1f5e7e;
+            transform: scale(0.97);
+        }
+
+        .bank-input {
+            padding: 10px 16px;
+            border-radius: 40px;
+            border: 1px solid #bdd4e7;
+            margin-right: 10px;
+            width: 200px;
+        }
+
+        .transaction-log {
+            background: #0e1e2a;
+            color: #b8e1fc;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #3d6b8c;
+            font-size: 0.85rem;
+            border-top: 1px solid #cbdde9;
+            padding-top: 2rem;
+        }
+
+        .inline-code {
+            background: #eef2f5;
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🏛️ Day 12: Object-Oriented Programming (OOP)</h1>
+        <p>Classes & Objects · __init__, self · Inheritance · Polymorphism · Encapsulation · Magic Methods · 🏦 Bank Account System</p>
+    </div>
+
+    <!-- Grid: Core OOP Concepts -->
+    <div class="grid">
+        <div class="card">
+            <div class="card-header"><span>🏗️</span> Classes, Objects, __init__, self</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Class = blueprint, object = instance. <code>__init__</code> = constructor, <code>self</code> = instance reference.<br>
+                    <strong>💡 WHY</strong> — Model real-world entities, bundle data & behavior.<br>
+                    <strong>📍 WHERE</strong> — Games, simulations, web apps, data models.
+                </div>
+                <pre><code>class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    
+    def bark(self):
+        return f"{self.name} says Woof!"
+
+my_dog = Dog("Rex", 3)
+print(my_dog.bark())</code></pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>🧬</span> Inheritance & Polymorphism</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Inheritance: child class gets parent attributes/methods. Polymorphism: same method different behavior.<br>
+                    <strong>💡 WHY</strong> — Reusability, extensibility, cleaner code architecture.<br>
+                    <strong>📍 WHERE</strong> — UI components, game characters, payment processors.
+                </div>
+                <pre><code>class Animal:
+    def speak(self):
+        pass
+
+class Cat(Animal):
+    def speak(self):
+        return "Meow!"
+
+class Dog(Animal):
+    def speak(self):
+        return "Woof!"
+
+# Polymorphism in action
+animals = [Cat(), Dog()]
+for a in animals:
+    print(a.speak())</code></pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>🔒</span> Encapsulation & Magic Methods</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Encapsulation: hide internal data using <code>_protected</code> or <code>__private</code>. Magic methods: <code>__str__</code>, <code>__repr__</code>, <code>__len__</code>, etc.<br>
+                    <strong>💡 WHY</strong> — Data protection, readable object representation.<br>
+                    <strong>📍 WHERE</strong> — APIs, libraries, secure data handling.
+                </div>
+                <pre><code>class BankAccount:
+    def __init__(self, owner, balance):
+        self.owner = owner
+        self.__balance = balance  # private
+    
+    def __str__(self):
+        return f"Account({self.owner}): ${self.__balance}"
+    
+    def get_balance(self):
+        return self.__balance</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- TWO COMPLETE EXAMPLES with WHAT/WHY/HOW/WHERE -->
+    <div style="margin-bottom: 2rem;">
+        <div class="card" style="margin-bottom: 1.8rem;">
+            <div class="card-header"><span>📘 EXAMPLE 1</span> — Inheritance & Polymorphism: Shape Hierarchy</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Base class <code>Shape</code> with <code>area()</code> method; <code>Circle</code> and <code>Rectangle</code> override it.<br>
+                    <strong>💡 WHY</strong> — Demonstrates code reuse and polymorphic behavior.<br>
+                    <strong>📍 WHERE</strong> — CAD software, game physics, geometry calculators.<br>
+                    <strong>⚙️ HOW</strong> — Inheritance + method overriding + polymorphism.
+                </div>
+                <pre><code>import math
+
+class Shape:
+    def area(self):
+        pass
+
+class Circle(Shape):
+    def __init__(self, radius):
+        self.radius = radius
+    def area(self):
+        return math.pi * self.radius ** 2
+
+class Rectangle(Shape):
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+    def area(self):
+        return self.width * self.height
+
+shapes = [Circle(5), Rectangle(4, 6)]
+for s in shapes:
+    print(f"Area: {s.area():.2f}")</code></pre>
+                <button class="btn-run" id="runShapeDemo">🔷 Run Shape Inheritance Demo</button>
+                <div id="shapeOutput" class="output-demo">💡 Click to see polymorphism with shapes</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>📘 EXAMPLE 2</span> — Magic Methods: __str__, __repr__, __add__</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Customize object string representation and operator behavior.<br>
+                    <strong>💡 WHY</strong> — Make objects printable, debuggable, support arithmetic.<br>
+                    <strong>📍 WHERE</strong> — Custom data types, vector math, debugging.<br>
+                    <strong>⚙️ HOW</strong> — Implement <code>__str__</code>, <code>__repr__</code>, <code>__add__</code>.
+                </div>
+                <pre><code>class Vector:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+    
+    def __str__(self):
+        return f"Vector({self.x}, {self.y})"
+    
+    def __repr__(self):
+        return f"Vector({self.x}, {self.y})"
+    
+    def __add__(self, other):
+        return Vector(self.x + other.x, self.y + other.y)
+
+v1 = Vector(2, 3)
+v2 = Vector(4, 5)
+v3 = v1 + v2
+print(v3)  # Vector(6, 8)</code></pre>
+                <button class="btn-run" id="runMagicDemo">✨ Run Magic Methods Demo</button>
+                <div id="magicOutput" class="output-demo">💡 Click to see __str__, __repr__, __add__ in action</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJECT: Bank Account System (deposit, withdraw, show balance) -->
+    <div class="project-box">
+        <h2 style="display: flex; align-items: center; gap: 12px;">🏦 Project: Bank Account System</h2>
+        <p><strong>What:</strong> Fully functional bank account with deposit, withdraw, balance check, transaction history.<br>
+        <strong>Why:</strong> Real-world OOP application — encapsulation, methods, validation.<br>
+        <strong>Where:</strong> Banking apps, financial systems, wallet applications.<br>
+        <strong>How:</strong> Class with private balance, deposit/withdraw methods, transaction log, <code>__str__</code> magic method.</p>
+        
+        <div class="bank-interface">
+            <div class="account-card" id="accountInfo">
+                <strong>🏦 Account: John Doe</strong><br>
+                Balance: $<span id="balanceDisplay">0.00</span><br>
+                Account #: ****1234
+            </div>
+            
+            <div class="bank-buttons">
+                <input type="number" id="amountInput" placeholder="Enter amount" class="bank-input" step="0.01">
+                <button id="depositBtn" class="bank-btn">💰 Deposit</button>
+                <button id="withdrawBtn" class="bank-btn">💸 Withdraw</button>
+                <button id="showBalanceBtn" class="bank-btn">📊 Show Balance</button>
+                <button id="resetAccountBtn" class="bank-btn" style="background: #6b7280;">🔄 Reset Account</button>
+            </div>
+            
+            <div id="transactionHistory" class="transaction-log">
+                📜 Transaction History:<br>
+                • Account created with $500.00 initial deposit
+            </div>
+            
+            <div style="margin-top: 1rem; font-size: 0.85rem; background: #eef3fc; border-radius: 1rem; padding: 0.7rem;">
+                💡 <strong>OOP Concepts used:</strong> Class & Object · <code>__init__</code> · <code>self</code> · Encapsulation (__balance) · Methods · <code>__str__</code> magic method · Transaction logging
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive OOP Playground -->
+    <div class="project-box">
+        <h2 style="display: flex; align-items: center; gap: 12px;">🧪 Live OOP Playground: Create Your Own Class</h2>
+        <p>Define a simple class and see instantiation in action.</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+            <div style="background: #f7fafd; border-radius: 1rem; padding: 1rem;">
+                <h3>📦 Define Class</h3>
+                <pre style="font-size:0.75rem; margin:0;">class Student:
+    def __init__(self, name, grade):
+        self.name = name
+        self.grade = grade
+    def info(self):
+        return f"{self.name}: {self.grade}%"</pre>
+                <button id="createStudentBtn" class="btn-run" style="margin-top: 8px;">👨‍🎓 Create Student Object</button>
+                <div id="studentOutput" class="output-demo" style="margin-top: 8px;">Click to create instance</div>
+            </div>
+            
+            <div style="background: #f7fafd; border-radius: 1rem; padding: 1rem;">
+                <h3>🔧 Inheritance Demo</h3>
+                <pre style="font-size:0.75rem; margin:0;">class Vehicle:
+    def move(self): return "Moving"
+class Car(Vehicle):
+    def move(self): return "Driving 🚗"</pre>
+                <button id="inheritanceDemoBtn" class="btn-run">Show Polymorphism</button>
+                <div id="inheritanceOutput" class="output-demo" style="margin-top: 8px;">Click to see method overriding</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        📌 Day 12: Classes & Objects · __init__ · self · Inheritance · Polymorphism · Encapsulation · Magic Methods (__str__, __repr__) · ✅ Bank Account System Project
+    </footer>
+</div>
+
+<script>
+    // ---------- EXAMPLE 1: Shape Inheritance Demo ----------
+    document.getElementById("runShapeDemo").addEventListener("click", () => {
+        class Shape {
+            area() { return 0; }
+        }
+        class Circle extends Shape {
+            constructor(radius) {
+                super();
+                this.radius = radius;
+            }
+            area() {
+                return Math.PI * this.radius ** 2;
+            }
+        }
+        class Rectangle extends Shape {
+            constructor(width, height) {
+                super();
+                this.width = width;
+                this.height = height;
+            }
+            area() {
+                return this.width * this.height;
+            }
+        }
+        const shapes = [new Circle(5), new Rectangle(4, 6)];
+        const results = shapes.map(s => `Area: ${s.area().toFixed(2)}`);
+        const output = `🔷 Shape Inheritance & Polymorphism:\n\nCircle (r=5): ${results[0]}\nRectangle (4x6): ${results[1]}\n\n✨ Same method 'area()' behaves differently per class — polymorphism!`;
+        document.getElementById("shapeOutput").innerHTML = `<pre style="background:#0e1e2a;color:#d4f1f9;border-radius:12px;padding:12px;">${escapeHtml(output)}</pre>`;
+    });
+
+    // ---------- EXAMPLE 2: Magic Methods Demo ----------
+    document.getElementById("runMagicDemo").addEventListener("click", () => {
+        class Vector {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+            }
+            toString() {
+                return `Vector(${this.x}, ${this.y})`;
+            }
+            add(other) {
+                return new Vector(this.x + other.x, this.y + other.y);
+            }
+        }
+        const v1 = new Vector(2, 3);
+        const v2 = new Vector(4, 5);
+        const v3 = v1.add(v2);
+        const output = `✨ Magic Methods Demo (__str__, __repr__, __add__):\n\nv1 = ${v1.toString()}\nv2 = ${v2.toString()}\nv1 + v2 = ${v3.toString()}\n\n💡 Python's __str__, __repr__, __add__ make objects intuitive and support operators.`;
+        document.getElementById("magicOutput").innerHTML = `<pre style="background:#0e1e2a;color:#d4f1f9;border-radius:12px;padding:12px;">${escapeHtml(output)}</pre>`;
+    });
+
+    // ---------- BANK ACCOUNT SYSTEM (OOP Project) ----------
+    class BankAccount {
+        constructor(owner, initialBalance = 0) {
+            this.owner = owner;
+            this._balance = initialBalance;
+            this.transactions = [];
+            this.accountNumber = Math.floor(Math.random() * 9000 + 1000);
+            this.addTransaction(`Account created with $${initialBalance.toFixed(2)}`);
+        }
+        
+        addTransaction(desc) {
+            const timestamp = new Date().toLocaleTimeString();
+            this.transactions.unshift(`[${timestamp}] ${desc}`);
+            if (this.transactions.length > 10) this.transactions.pop();
+        }
+        
+        deposit(amount) {
+            if (amount <= 0) return { success: false, message: "Amount must be positive" };
+            this._balance += amount;
+            this.addTransaction(`Deposited $${amount.toFixed(2)}. Balance: $${this._balance.toFixed(2)}`);
+            return { success: true, balance: this._balance, message: `Deposited $${amount.toFixed(2)}` };
+        }
+        
+        withdraw(amount) {
+            if (amount <= 0) return { success: false, message: "Amount must be positive" };
+            if (amount > this._balance) return { success: false, message: "Insufficient funds" };
+            this._balance -= amount;
+            this.addTransaction(`Withdrew $${amount.toFixed(2)}. Balance: $${this._balance.toFixed(2)}`);
+            return { success: true, balance: this._balance, message: `Withdrew $${amount.toFixed(2)}` };
+        }
+        
+        getBalance() {
+            return this._balance;
+        }
+        
+        getTransactionHistory() {
+            return this.transactions;
+        }
+        
+        getInfo() {
+            return `${this.owner} | Acc: ${this.accountNumber} | Balance: $${this._balance.toFixed(2)}`;
+        }
+        
+        toString() {
+            return `BankAccount(owner=${this.owner}, balance=$${this._balance.toFixed(2)})`;
+        }
+    }
+    
+    // Initialize bank account
+    let bankAccount = new BankAccount("John Doe", 500.00);
+    
+    function updateBankUI() {
+        document.getElementById("balanceDisplay").innerText = bankAccount.getBalance().toFixed(2);
+        const historyHtml = bankAccount.getTransactionHistory().map(t => `• ${escapeHtml(t)}`).join('<br>');
+        document.getElementById("transactionHistory").innerHTML = `📜 Transaction History:<br>${historyHtml || "• No transactions yet"}`;
+        document.getElementById("accountInfo").innerHTML = `<strong>🏦 Account: ${escapeHtml(bankAccount.owner)}</strong><br>Balance: $<span id="balanceDisplay">${bankAccount.getBalance().toFixed(2)}</span><br>Account #: ****${bankAccount.accountNumber}`;
+    }
+    
+    document.getElementById("depositBtn").addEventListener("click", () => {
+        const amount = parseFloat(document.getElementById("amountInput").value);
+        if (isNaN(amount)) {
+            alert("Please enter a valid amount");
+            return;
+        }
+        const result = bankAccount.deposit(amount);
+        if (result.success) {
+            updateBankUI();
+            document.getElementById("amountInput").value = "";
+        } else {
+            alert(result.message);
+        }
+    });
+    
+    document.getElementById("withdrawBtn").addEventListener("click", () => {
+        const amount = parseFloat(document.getElementById("amountInput").value);
+        if (isNaN(amount)) {
+            alert("Please enter a valid amount");
+            return;
+        }
+        const result = bankAccount.withdraw(amount);
+        if (result.success) {
+            updateBankUI();
+            document.getElementById("amountInput").value = "";
+        } else {
+            alert(result.message);
+        }
+    });
+    
+    document.getElementById("showBalanceBtn").addEventListener("click", () => {
+        alert(`Current balance: $${bankAccount.getBalance().toFixed(2)}`);
+    });
+    
+    document.getElementById("resetAccountBtn").addEventListener("click", () => {
+        bankAccount = new BankAccount("John Doe", 500.00);
+        updateBankUI();
+        alert("Account has been reset to $500.00");
+    });
+    
+    updateBankUI();
+    
+    // ---------- Interactive OOP Playground ----------
+    document.getElementById("createStudentBtn").addEventListener("click", () => {
+        class Student {
+            constructor(name, grade) {
+                this.name = name;
+                this.grade = grade;
+            }
+            info() {
+                return `${this.name}: ${this.grade}%`;
+            }
+        }
+        const student = new Student("Alice", 92);
+        document.getElementById("studentOutput").innerHTML = `<strong>✅ Student object created!</strong><br>${student.info()}<br><br>💡 Class: Student, __init__(name, grade), method: info()`;
+    });
+    
+    document.getElementById("inheritanceDemoBtn").addEventListener("click", () => {
+        class Vehicle {
+            move() { return "Moving..."; }
+        }
+        class Car extends Vehicle {
+            move() { return "Driving 🚗"; }
+        }
+        class Bicycle extends Vehicle {
+            move() { return "Pedaling 🚲"; }
+        }
+        const vehicles = [new Vehicle(), new Car(), new Bicycle()];
+        const results = vehicles.map(v => v.move());
+        const output = `🔧 Inheritance & Polymorphism Demo:\n\nVehicle: ${results[0]}\nCar: ${results[1]}\nBicycle: ${results[2]}\n\n✨ Same method 'move()' overridden in child classes — polymorphic behavior!`;
+        document.getElementById("inheritanceOutput").innerHTML = `<pre style="background:#0e1e2a;color:#d4f1f9;border-radius:12px;padding:8px;font-size:0.8rem;">${escapeHtml(output)}</pre>`;
+    });
+    
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+</script>
+</body>
+</html>
