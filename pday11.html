@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Day 11: Lambda, Map, Filter, Reduce | List/Dict Comprehensions | Number Processing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f4fa 0%, #e8edf3 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: #1a2c3e;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #1f5e7e, #0e4b63);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: #2c5368;
+            background: rgba(255, 255, 250, 0.85);
+            backdrop-filter: blur(2px);
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 1.8rem;
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 22px 35px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: #1f3b4c;
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-header span {
+            font-size: 1.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .what-why-where {
+            background: #eef3fa;
+            border-radius: 1.2rem;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            border-left: 4px solid #2c7da0;
+        }
+
+        .what-why-where strong {
+            color: #1f5e7e;
+        }
+
+        pre {
+            background: #0e1e2a;
+            color: #e2f0fa;
+            padding: 1rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: #eef2f5;
+            padding: 0.2rem 0.45rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #c7254e;
+        }
+
+        .example-title {
+            font-weight: 700;
+            margin: 1rem 0 0.3rem 0;
+            color: #0f3b4c;
+            border-left: 3px solid #2c7da0;
+            padding-left: 0.7rem;
+        }
+
+        .output-demo {
+            background: #f0f4f9;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-top: 0.8rem;
+            font-family: monospace;
+            border: 1px dashed #bdd4e7;
+            color: #1f4e6e;
+            font-size: 0.85rem;
+        }
+
+        .btn-run {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-run:hover {
+            background: #1f5e7e;
+            transform: scale(0.97);
+        }
+
+        .project-box {
+            background: linear-gradient(135deg, #ffffff, #fefefe);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            margin: 2rem 0 1rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #cde3f0;
+        }
+
+        .exercise-area {
+            background: #f7fafd;
+            border-radius: 1.4rem;
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .number-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 1rem 0;
+        }
+
+        .number-btn {
+            background: #eef3fc;
+            border: 1px solid #bdd4e7;
+            padding: 8px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+
+        .number-btn:hover {
+            background: #cde3f0;
+        }
+
+        .result-box {
+            background: #0e1e2a;
+            color: #d4f1f9;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-top: 1rem;
+            font-family: monospace;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #3d6b8c;
+            font-size: 0.85rem;
+            border-top: 1px solid #cbdde9;
+            padding-top: 2rem;
+        }
+
+        .inline-code {
+            background: #eef2f5;
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>⚡ Day 11: Lambda · Map · Filter · Reduce</h1>
+        <p>Lambda functions | map() | filter() | reduce() | List/Dict Comprehensions | 🔢 Filter Evens & Square Them</p>
+    </div>
+
+    <!-- Grid: Core Concepts -->
+    <div class="grid">
+        <div class="card">
+            <div class="card-header"><span>λ</span> Lambda Functions</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Anonymous inline functions: <code>lambda x: x*2</code><br>
+                    <strong>💡 WHY</strong> — Short, single-expression functions without <code>def</code>. Perfect for map/filter.<br>
+                    <strong>📍 WHERE</strong> — Callbacks, sorting keys, functional transformations.
+                </div>
+                <pre><code># Regular function
+def square(x): return x**2
+
+# Lambda equivalent
+square = lambda x: x**2
+
+# Used directly
+result = (lambda x, y: x + y)(5, 3)  # 8</code></pre>
+                <div class="output-demo">✨ <strong>Common:</strong> <code>sorted(list, key=lambda x: x[1])</code></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>🗺️</span> map() & filter()</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — <code>map(func, iterable)</code> applies function to all items.<br>
+                    <code>filter(func, iterable)</code> keeps items where func returns True.<br>
+                    <strong>💡 WHY</strong> — Functional, concise, lazy evaluation (returns iterators).<br>
+                    <strong>📍 WHERE</strong> — Data transformation, cleaning, extraction.
+                </div>
+                <pre><code>nums = [1,2,3,4,5]
+squared = list(map(lambda x: x**2, nums))
+evens = list(filter(lambda x: x%2==0, nums))
+
+print(squared)  # [1,4,9,16,25]
+print(evens)    # [2,4]</code></pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>📉</span> reduce() & Comprehensions</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — <code>reduce(func, iterable)</code> cumulatively applies function (from functools).<br>
+                    List/dict comprehensions: <code>[expr for item in iterable if condition]</code><br>
+                    <strong>💡 WHY</strong> — reduce for aggregation; comprehensions are Pythonic and fast.<br>
+                    <strong>📍 WHERE</strong> — Summing, product, flattening, generating transformed collections.
+                </div>
+                <pre><code>from functools import reduce
+
+nums = [1,2,3,4]
+product = reduce(lambda x,y: x*y, nums)  # 24
+
+# List comprehension (more Pythonic)
+squares = [x**2 for x in nums if x%2==0]  # [4,16]</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- TWO COMPLETE EXAMPLES with WHAT/WHY/HOW/WHERE -->
+    <div style="margin-bottom: 2rem;">
+        <div class="card" style="margin-bottom: 1.8rem;">
+            <div class="card-header"><span>📘 EXAMPLE 1</span> — Lambda + Map/Filter: Price Calculator</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Apply discount to prices using map, filter expensive items.<br>
+                    <strong>💡 WHY</strong> — Real-world e-commerce: transform prices, filter by threshold.<br>
+                    <strong>📍 WHERE</strong> — Shopping carts, pricing engines, data pipelines.<br>
+                    <strong>⚙️ HOW</strong> — <code>map(lambda p: p*0.9, prices)</code> for 10% off, <code>filter(lambda p: p > 50)</code>.
+                </div>
+                <pre><code>from functools import reduce
+
+prices = [25, 60, 45, 100, 30, 80]
+
+# Apply 10% discount using map
+discounted = list(map(lambda p: round(p * 0.9, 2), prices))
+
+# Filter products above $50 after discount
+premium = list(filter(lambda p: p > 50, discounted))
+
+# Total using reduce
+total = reduce(lambda a,b: a+b, discounted)
+
+print(f"Discounted: {discounted}")
+print(f"Premium (>$50): {premium}")
+print(f"Total: ${total}")</code></pre>
+                <button class="btn-run" id="runMapFilterReduceDemo">💰 Run Price Processor Demo</button>
+                <div id="mapFilterOutput" class="output-demo">💡 Click to see map, filter, reduce in action</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>📘 EXAMPLE 2</span> — List & Dict Comprehensions</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Generate transformed lists/dicts concisely using comprehensions.<br>
+                    <strong>💡 WHY</strong> — More readable and faster than traditional loops.<br>
+                    <strong>📍 WHERE</strong> — Data preparation, feature engineering, filtering large datasets.<br>
+                    <strong>⚙️ HOW</strong> — <code>[x**2 for x in range(10)]</code>, <code>{k:v*2 for k,v in dict.items()}</code>.
+                </div>
+                <pre><code># List comprehension: squares of evens
+evens_squares = [x**2 for x in range(1,11) if x % 2 == 0]
+
+# Dict comprehension: number -> square
+square_dict = {x: x**2 for x in range(1,6)}
+
+# Nested comprehension: flatten matrix
+matrix = [[1,2,3], [4,5,6]]
+flattened = [num for row in matrix for num in row]
+
+print(f"Even squares: {evens_squares}")
+print(f"Dict: {square_dict}")
+print(f"Flattened: {flattened}")</code></pre>
+                <button class="btn-run" id="runComprehensionDemo">📋 Run Comprehensions Demo</button>
+                <div id="comprehensionOutput" class="output-demo">💡 Click to see list/dict comprehensions</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXERCISE: Process list of numbers to filter evens and square them -->
+    <div class="project-box">
+        <h2 style="display: flex; align-items: center; gap: 12px;">🔢 Exercise: Filter Evens & Square Them</h2>
+        <p><strong>What:</strong> Take a list of numbers, filter even numbers, then square each result.<br>
+        <strong>Why:</strong> Classic functional programming pattern — demonstrates lambda, filter, map.<br>
+        <strong>Where:</strong> Data preprocessing, mathematical transformations, feature engineering.<br>
+        <strong>How:</strong> Using <code>filter(lambda x: x%2==0, numbers)</code> + <code>map(lambda x: x**2, ...)</code> OR list comprehension.</p>
+        
+        <div class="exercise-area">
+            <div style="margin-bottom: 1rem;">
+                <strong>📊 Sample Dataset:</strong> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 18, 20, 25]
+            </div>
+            <div class="number-buttons">
+                <button class="number-btn" data-method="filter-map">✅ Using filter() + map()</button>
+                <button class="number-btn" data-method="comprehension">✨ Using List Comprehension</button>
+                <button class="number-btn" data-method="lambda-only">λ Using Lambda + map/filter combined</button>
+                <button class="number-btn" data-method="custom">🎯 Custom Numbers</button>
+            </div>
+            <div id="customNumbersSection" style="display: none; margin-top: 1rem;">
+                <input type="text" id="customNumbersInput" placeholder="Enter numbers separated by commas (e.g., 2,5,8,11,14)" style="width: 100%; padding: 8px; border-radius: 30px; border: 1px solid #bdd4e7;">
+                <button id="applyCustomBtn" class="btn-run" style="margin-top: 8px;">Apply Custom Numbers</button>
+            </div>
+            <div id="exerciseResult" class="result-box">
+                💡 Click any button above to process numbers → filter evens → square them
+            </div>
+            <div style="margin-top: 1rem; font-size: 0.85rem; background: #eef3fc; border-radius: 1rem; padding: 0.7rem;">
+                💡 <strong>Concepts:</strong> <span class="inline-code">filter(lambda x: x%2==0, nums)</span> → keeps evens.<br>
+                <span class="inline-code">map(lambda x: x**2, ...)</span> → squares each.<br>
+                Or one-liner: <span class="inline-code">[x**2 for x in nums if x%2==0]</span> (most Pythonic!)
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Playground: Live Lambda & Map/Filter -->
+    <div class="project-box">
+        <h2 style="display: flex; align-items: center; gap: 12px;">🧪 Live Playground: Lambda, Map, Filter</h2>
+        <p>Test your own lambda expressions on a list of numbers.</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+            <div style="background: #f7fafd; border-radius: 1rem; padding: 1rem;">
+                <h3>🔧 Map: Apply lambda</h3>
+                <input type="text" id="mapLambdaInput" placeholder="lambda x: x*2" value="lambda x: x**2" style="width:100%; padding: 6px; border-radius: 30px; border: 1px solid #bdd4e7; font-family: monospace;">
+                <button id="applyMapBtn" class="btn-run">Apply Map</button>
+                <div id="mapLiveResult" class="output-demo" style="margin-top: 8px;">Result will appear</div>
+            </div>
+            
+            <div style="background: #f7fafd; border-radius: 1rem; padding: 1rem;">
+                <h3>🎯 Filter: Apply lambda</h3>
+                <input type="text" id="filterLambdaInput" placeholder="lambda x: x>5" value="lambda x: x%2==0" style="width:100%; padding: 6px; border-radius: 30px; border: 1px solid #bdd4e7; font-family: monospace;">
+                <button id="applyFilterBtn" class="btn-run">Apply Filter</button>
+                <div id="filterLiveResult" class="output-demo" style="margin-top: 8px;">Filtered result</div>
+            </div>
+        </div>
+        <div style="margin-top: 1rem; text-align: center; font-size: 0.8rem;">
+            Base numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        </div>
+    </div>
+
+    <footer>
+        📌 Day 11: Lambda functions | map() | filter() | reduce() | List/Dict Comprehensions | ✅ Exercise: Filter Evens & Square Numbers
+    </footer>
+</div>
+
+<script>
+    // Helper: evaluate lambda safely (simulate Python-like expression)
+    function evaluateLambda(lambdaStr, x) {
+        try {
+            // Remove 'lambda x:' prefix if present
+            let expr = lambdaStr.trim();
+            if (expr.startsWith('lambda x:')) {
+                expr = expr.substring('lambda x:'.length);
+            }
+            // Create function dynamically
+            const fn = new Function('x', 'return (' + expr + ')');
+            return fn(x);
+        } catch(e) {
+            return null;
+        }
+    }
+    
+    function evaluateFilterLambda(lambdaStr, x) {
+        try {
+            let expr = lambdaStr.trim();
+            if (expr.startsWith('lambda x:')) {
+                expr = expr.substring('lambda x:'.length);
+            }
+            const fn = new Function('x', 'return Boolean(' + expr + ')');
+            return fn(x);
+        } catch(e) {
+            return null;
+        }
+    }
+    
+    // Base dataset for examples and playground
+    const baseNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    
+    // EXAMPLE 1: Map/Filter/Reduce Demo
+    document.getElementById("runMapFilterReduceDemo").addEventListener("click", () => {
+        const prices = [25, 60, 45, 100, 30, 80];
+        const discounted = prices.map(p => Math.round(p * 0.9 * 100) / 100);
+        const premium = discounted.filter(p => p > 50);
+        const total = discounted.reduce((a, b) => a + b, 0);
+        
+        const output = `💰 Price Processor (map → filter → reduce):\n\n📦 Original prices: [${prices.join(", ")}]\n🔻 10% off (map): [${discounted.join(", ")}]\n⭐ Premium >$50 (filter): [${premium.join(", ")}]\n📊 Total after discount (reduce): $${total.toFixed(2)}\n\n✨ Demonstrates functional pipeline: map → filter → reduce`;
+        document.getElementById("mapFilterOutput").innerHTML = `<pre style="background:#0e1e2a;color:#d4f1f9;border-radius:12px;padding:12px;">${escapeHtml(output)}</pre>`;
+    });
+    
+    // EXAMPLE 2: List/Dict Comprehensions Demo
+    document.getElementById("runComprehensionDemo").addEventListener("click", () => {
+        const evensSquares = [];
+        for (let i = 1; i <= 10; i++) {
+            if (i % 2 === 0) evensSquares.push(i * i);
+        }
+        const squareDict = {};
+        for (let i = 1; i <= 5; i++) squareDict[i] = i * i;
+        const matrix = [[1,2,3], [4,5,6]];
+        const flattened = [];
+        for (let row of matrix) {
+            for (let num of row) flattened.push(num);
+        }
+        
+        const output = `📋 Comprehensions Demo:\n\n🔢 Even squares (list comp): [${evensSquares.join(", ")}]\n📖 Square dict (dict comp): {${Object.entries(squareDict).map(([k,v]) => `${k}:${v}`).join(", ")}}\n🔀 Flattened matrix: [${flattened.join(", ")}]\n\n💡 List/dict comprehensions are more Pythonic than traditional loops.`;
+        document.getElementById("comprehensionOutput").innerHTML = `<pre style="background:#0e1e2a;color:#d4f1f9;border-radius:12px;padding:12px;">${escapeHtml(output)}</pre>`;
+    });
+    
+    // EXERCISE: Filter evens and square them
+    let currentNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 18, 20, 25];
+    
+    function filterEvensAndSquare(numbers, method) {
+        if (method === 'filter-map') {
+            const evens = numbers.filter(n => n % 2 === 0);
+            const squares = evens.map(n => n * n);
+            return { evens, squares, method: "filter() + map()" };
+        } else if (method === 'comprehension') {
+            const squares = numbers.filter(n => n % 2 === 0).map(n => n * n);
+            const evens = numbers.filter(n => n % 2 === 0);
+            return { evens, squares, method: "List Comprehension: [x**2 for x in numbers if x%2==0]" };
+        } else if (method === 'lambda-only') {
+            const evens = numbers.filter(n => n % 2 === 0);
+            const squares = evens.map(n => n * n);
+            return { evens, squares, method: "Lambda with filter/map (lambda x: x%2==0, lambda x: x**2)" };
+        }
+        return { evens: [], squares: [], method: "" };
+    }
+    
+    function displayExerciseResult(method) {
+        let result;
+        if (method === 'custom') {
+            const customInput = document.getElementById("customNumbersInput").value;
+            if (customInput.trim()) {
+                const customNums = customInput.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+                if (customNums.length > 0) {
+                    currentNumbers = customNums;
+                }
+            }
+            result = filterEvensAndSquare(currentNumbers, 'filter-map');
+        } else {
+            result = filterEvensAndSquare(currentNumbers, method);
+        }
+        
+        const outputHtml = `
+            <strong>🎯 Exercise: Filter Evens & Square Them</strong><br>
+            📊 Original numbers: [${currentNumbers.join(", ")}]<br>
+            ✅ Even numbers (filtered): [${result.evens.join(", ")}]<br>
+            🔲 Squares of evens: [${result.squares.join(", ")}]<br>
+            📐 Method used: <code>${escapeHtml(result.method)}</code><br><br>
+            💡 <strong>One-liner equivalent:</strong> <code>[x**2 for x in [${currentNumbers.slice(0,5).join(", ")}...] if x%2==0]</code>
+        `;
+        document.getElementById("exerciseResult").innerHTML = outputHtml;
+    }
+    
+    // Attach event listeners to method buttons
+    document.querySelectorAll('.number-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const method = btn.getAttribute('data-method');
+            if (method === 'custom') {
+                document.getElementById("customNumbersSection").style.display = "block";
+                displayExerciseResult('custom');
+            } else {
+                document.getElementById("customNumbersSection").style.display = "none";
+                displayExerciseResult(method);
+            }
+        });
+    });
+    
+    document.getElementById("applyCustomBtn").addEventListener("click", () => {
+        displayExerciseResult('custom');
+    });
+    
+    // Live Playground: Map & Filter with custom lambda
+    const playgroundNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    
+    document.getElementById("applyMapBtn").addEventListener("click", () => {
+        const lambdaStr = document.getElementById("mapLambdaInput").value;
+        const results = [];
+        let valid = true;
+        for (let x of playgroundNumbers) {
+            const val = evaluateLambda(lambdaStr, x);
+            if (val === null) {
+                valid = false;
+                break;
+            }
+            results.push(val);
+        }
+        if (valid) {
+            document.getElementById("mapLiveResult").innerHTML = `<strong>map(${escapeHtml(lambdaStr)})</strong><br>Input: [${playgroundNumbers.join(", ")}]<br>Result: [${results.join(", ")}]`;
+        } else {
+            document.getElementById("mapLiveResult").innerHTML = `❌ Invalid lambda expression. Try: <code>lambda x: x*2</code> or <code>x**2</code>`;
+        }
+    });
+    
+    document.getElementById("applyFilterBtn").addEventListener("click", () => {
+        const lambdaStr = document.getElementById("filterLambdaInput").value;
+        const results = [];
+        let valid = true;
+        for (let x of playgroundNumbers) {
+            const val = evaluateFilterLambda(lambdaStr, x);
+            if (val === null) {
+                valid = false;
+                break;
+            }
+            if (val) results.push(x);
+        }
+        if (valid) {
+            document.getElementById("filterLiveResult").innerHTML = `<strong>filter(${escapeHtml(lambdaStr)})</strong><br>Input: [${playgroundNumbers.join(", ")}]<br>Filtered: [${results.join(", ")}]`;
+        } else {
+            document.getElementById("filterLiveResult").innerHTML = `❌ Invalid lambda. Try: <code>lambda x: x>5</code> or <code>x%2==0</code>`;
+        }
+    });
+    
+    // Helper function escapeHtml
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    // Initialize with default exercise result
+    setTimeout(() => {
+        displayExerciseResult('filter-map');
+    }, 100);
+</script>
+</body>
+</html>
