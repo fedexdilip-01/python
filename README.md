@@ -2,7 +2,7 @@
 
 
 # Week 1–2: Foundations
-   ## Day 1–2: Basics
+   ## Day 1–2: Basics - https://fedexdilip-01.github.io/python/pday1.html
 Python installation, IDE (VS Code, PyCharm, or Jupyter)
 
 Variables, data types (int, float, str, bool)
