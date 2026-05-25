@@ -40,7 +40,8 @@ Create and use your own module
 
 Exercise: Build a password generator using random & string
 
-# Day 10: Working with Libraries (Pandas, NumPy intro)
+# Day 10: Working with Libraries (Pandas, NumPy intro)-- https://fedexdilip-01.github.io/python/pday101.html
+Lists, tuples, dictionaries, sets
 Install libraries (pip)
 
 NumPy arrays, basic operations
