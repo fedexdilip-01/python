@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Python Modules & Packages: import, os, sys, random, datetime | Password Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f4fa 0%, #e8edf3 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: #1a2c3e;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #1f5e7e, #0e4b63);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: #2c5368;
+            background: rgba(255, 255, 250, 0.85);
+            backdrop-filter: blur(2px);
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 1.8rem;
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 22px 35px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: #1f3b4c;
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-header span {
+            font-size: 1.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .what-why-where {
+            background: #eef3fa;
+            border-radius: 1.2rem;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            border-left: 4px solid #2c7da0;
+        }
+
+        .what-why-where strong {
+            color: #1f5e7e;
+        }
+
+        pre {
+            background: #0e1e2a;
+            color: #e2f0fa;
+            padding: 1rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: #eef2f5;
+            padding: 0.2rem 0.45rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #c7254e;
+        }
+
+        .example-title {
+            font-weight: 700;
+            margin: 1rem 0 0.3rem 0;
+            color: #0f3b4c;
+            border-left: 3px solid #2c7da0;
+            padding-left: 0.7rem;
+        }
+
+        .output-demo {
+            background: #f0f4f9;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-top: 0.8rem;
+            font-family: monospace;
+            border: 1px dashed #bdd4e7;
+            color: #1f4e6e;
+            font-size: 0.85rem;
+        }
+
+        .btn-run {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-run:hover {
+            background: #1f5e7e;
+            transform: scale(0.97);
+        }
+
+        .project-box {
+            background: linear-gradient(135deg, #ffffff, #fefefe);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            margin: 2rem 0 1rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #cde3f0;
+        }
+
+        .pass-gen {
+            background: #f7fafd;
+            border-radius: 1.4rem;
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .custom-module-demo {
+            background: #eef3fc;
+            border-radius: 1.2rem;
+            padding: 1rem;
+            margin-top: 1.2rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #3d6b8c;
+            font-size: 0.85rem;
+            border-top: 1px solid #cbdde9;
+            padding-top: 2rem;
+        }
+
+        .pass-output {
+            font-family: 'Fira Code', monospace;
+            background: #0e1e2a;
+            color: #bbf0e6;
+            padding: 1rem;
+            border-radius: 1rem;
+            word-break: break-all;
+            margin-top: 1rem;
+        }
+
+        .strength-badge {
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>📦 Day 9: Modules & Packages</h1>
+        <p>import · from ... import · os, sys, random, datetime, math · Create your own module · 🔐 Password Generator</p>
+    </div>
+
+    <!-- Grid: Core Concepts -->
+    <div class="grid">
+        <div class="card">
+            <div class="card-header"><span>📦</span> Import System & Syntax</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — <code>import module</code>, <code>from module import function</code>, aliases (<code>as</code>).<br>
+                    <strong>💡 WHY</strong> — Reuse code, avoid naming conflicts, leverage Python's ecosystem.<br>
+                    <strong>📍 WHERE</strong> — Every Python project — from scripts to web frameworks.
+                </div>
+                <pre><code>import math
+from random import randint
+import datetime as dt
+
+print(math.pi)
+print(randint(1,10))
+print(dt.date.today())</code></pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>⚙️</span> Essential Built-in Modules</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — <code>os</code> (system ops), <code>sys</code> (interpreter), <code>random</code>, <code>datetime</code>, <code>math</code>.<br>
+                    <strong>💡 WHY</strong> — Perform file operations, generate randomness, handle dates, math calculations.<br>
+                    <strong>📍 WHERE</strong> — Automation scripts, data science, backend tools.
+                </div>
+                <pre><code>import os, sys, random, datetime, math
+
+print(os.getcwd())        # current directory
+print(sys.version)        # python version
+print(random.random())    # random float
+print(datetime.datetime.now())
+print(math.factorial(5))</code></pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>📁</span> Create & Use Your Own Module</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Create <code>.py</code> file with functions/classes, then import it.<br>
+                    <strong>💡 WHY</strong> — Organize large projects, share utilities across files.<br>
+                    <strong>📍 WHERE</strong> — Multi-file projects, reusable libraries.
+                </div>
+                <pre><code># myutils.py
+def greet(name):
+    return f"Hello {name}!"
+
+# main.py
+from myutils import greet
+print(greet("Alice"))</code></pre>
+                <div class="output-demo">✨ <strong>Tip:</strong> Use <code>if __name__ == "__main__"</code> to test modules.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TWO COMPLETE EXAMPLES with WHAT/WHY/HOW/WHERE -->
+    <div style="margin-bottom: 2rem;">
+        <div class="card" style="margin-bottom: 1.8rem;">
+            <div class="card-header"><span>📘 EXAMPLE 1</span> — System Info Tool (os, sys, datetime)</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Gather system information using <code>os</code>, <code>sys</code>, and <code>datetime</code> modules.<br>
+                    <strong>💡 WHY</strong> — Understand environment, cross-platform scripting, logging timestamps.<br>
+                    <strong>📍 WHERE</strong> — Diagnostic tools, build scripts, deployment checks.<br>
+                    <strong>⚙️ HOW</strong> — Combine <code>os.getcwd()</code>, <code>sys.platform</code>, <code>datetime.now()</code>.
+                </div>
+                <pre><code>import os, sys, datetime
+
+def system_report():
+    return {
+        "OS": sys.platform,
+        "Python": sys.version.split()[0],
+        "Working Dir": os.getcwd(),
+        "Timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+
+print(system_report())</code></pre>
+                <button class="btn-run" id="runSystemInfo">🖥️ Run System Info Tool</button>
+                <div id="systemInfoOutput" class="output-demo">💡 Click to see system info using os, sys, datetime</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>📘 EXAMPLE 2</span> — Custom Module Simulation + random/math</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Create a virtual custom module (<code>stats_tools</code>) with statistical helpers.<br>
+                    <strong>💡 WHY</strong> — Demonstrate module creation, random number generation, and math functions.<br>
+                    <strong>📍 WHERE</strong> — Data analysis pipelines, game utilities, reusable math libraries.<br>
+                    <strong>⚙️ HOW</strong> — Define functions in a simulated module, import them, use random & math.
+                </div>
+                <pre><code># stats_tools.py (custom module)
+import random, math
+
+def roll_dice(sides=6):
+    return random.randint(1, sides)
+
+def circle_area(radius):
+    return math.pi * radius ** 2
+
+# main script
+from stats_tools import roll_dice, circle_area
+print(f"Dice: {roll_dice()}")
+print(f"Area: {circle_area(5):.2f}")</code></pre>
+                <button class="btn-run" id="runCustomModuleDemo">🧩 Run Custom Module Demo</button>
+                <div id="customModuleOutput" class="output-demo">💡 Click to see custom module functions + random/math</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXERCISE: Password Generator using random & string (Full Interactive) -->
+    <div class="project-box">
+        <h2 style="display: flex; align-items: center; gap: 12px;">🔐 Exercise: Password Generator</h2>
+        <p><strong>What:</strong> Generate secure random passwords using <code>random</code> and <code>string</code> modules.<br>
+        <strong>Why:</strong> Real-world security, demonstrates module imports, randomness, and character sets.<br>
+        <strong>Where:</strong> User registration, account creation, security tools.<br>
+        <strong>How:</strong> Combine <code>string.ascii_letters</code>, <code>string.digits</code>, <code>string.punctuation</code> + <code>random.choice()</code>.</p>
+        
+        <div class="pass-gen">
+            <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end; margin-bottom: 20px;">
+                <div>
+                    <label><strong>📏 Length:</strong></label><br>
+                    <input type="number" id="passLength" min="6" max="64" value="16" style="width: 90px; padding: 8px; border-radius: 30px; border: 1px solid #bdd4e7;">
+                </div>
+                <div>
+                    <label><strong>🔢 Digits:</strong></label><br>
+                    <input type="checkbox" id="includeDigits" checked style="width: 20px; height: 20px;">
+                </div>
+                <div>
+                    <label><strong>✨ Punctuation:</strong></label><br>
+                    <input type="checkbox" id="includePunct" checked style="width: 20px; height: 20px;">
+                </div>
+                <div>
+                    <label><strong>🔠 Uppercase:</strong></label><br>
+                    <input type="checkbox" id="includeUpper" checked style="width: 20px; height: 20px;">
+                </div>
+                <div>
+                    <button id="generatePasswordBtn" style="background: #1f6e8c; padding: 8px 28px;">⚡ Generate Password</button>
+                </div>
+            </div>
+            <div id="passwordResult" class="pass-output">
+                🔐 Your secure password will appear here
+            </div>
+            <div style="margin-top: 15px; display: flex; gap: 12px; flex-wrap: wrap;">
+                <button id="copyPasswordBtn" style="background: #4f6f8f;">📋 Copy to Clipboard</button>
+                <button id="explainModulesBtn" style="background: #2c7da0;">📖 Show Module Usage</button>
+            </div>
+            <div id="moduleExplanation" style="margin-top: 15px; font-size: 0.85rem; background: #eef3fc; border-radius: 1rem; padding: 0.8rem; display: none;">
+                💡 <strong>Modules used:</strong> <code>random</code> (random.choice), <code>string</code> (ascii_letters, digits, punctuation).<br>
+                <strong>Code:</strong> <code>import random, string; chars = string.ascii_letters + string.digits + string.punctuation; password = ''.join(random.choice(chars) for _ in range(length))</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Module Creator Demo (Simulate creating your own module) -->
+    <div class="project-box">
+        <h2 style="display: flex; align-items: center; gap: 12px;">📂 Create & Use Your Own Module (Simulation)</h2>
+        <p>Learn how to create a reusable module, import it, and use its functions — just like in real Python projects!</p>
+        <div class="custom-module-demo">
+            <div style="margin-bottom: 12px;">
+                <strong>📄 mymodule.py (custom module)</strong>
+                <pre style="margin-top: 8px;"><code>def greet(name, greeting="Hello"):
+    return f"{greeting}, {name}!"
+
+def add(a, b):
+    return a + b
+
+def is_even(num):
+    return num % 2 == 0</code></pre>
+            </div>
+            <div style="margin-bottom: 12px;">
+                <strong>▶️ main.py (using custom module)</strong>
+                <pre><code>from mymodule import greet, add, is_even
+
+print(greet("Python Learner"))
+print(f"5 + 3 = {add(5, 3)}")
+print(f"10 is even? {is_even(10)}")</code></pre>
+            </div>
+            <button id="runCustomModuleSim" class="btn-run">🚀 Run Custom Module Simulation</button>
+            <div id="customModuleSimOutput" class="output-demo" style="margin-top: 12px;">💡 Click to see custom module in action</div>
+        </div>
+    </div>
+
+    <footer>
+        📦 Day 9 Complete: import, from...import, os, sys, random, datetime, math | Create your own module | ✅ Password Generator Exercise using random & string
+    </footer>
+</div>
+
+<script>
+    // Helper: escape HTML
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // EXAMPLE 1: System Info Tool (os, sys, datetime simulation)
+    document.getElementById("runSystemInfo").addEventListener("click", () => {
+        const platform = navigator.platform || "Win32 (simulated)";
+        const pythonVersion = "3.11.4 (simulated)";
+        const workingDir = "/home/user/projects (simulated)";
+        const now = new Date();
+        const timestamp = now.toLocaleString();
+        
+        const output = `📊 System Report (os, sys, datetime):\n🔹 OS Platform: ${platform}\n🔹 Python Version: ${pythonVersion}\n🔹 Working Directory: ${workingDir}\n🔹 Timestamp: ${timestamp}\n\n✨ Demonstrates 'import os', 'import sys', 'import datetime'`;
+        document.getElementById("systemInfoOutput").innerHTML = `<pre style="background:#0e1e2a;color:#d4f1f9;border-radius:12px;padding:12px;">${escapeHtml(output)}</pre>`;
+    });
+
+    // EXAMPLE 2: Custom Module Demo (simulating stats_tools with random/math)
+    document.getElementById("runCustomModuleDemo").addEventListener("click", () => {
+        // Simulated custom module functions
+        function rollDice(sides = 6) {
+            return Math.floor(Math.random() * sides) + 1;
+        }
+        function circleArea(radius) {
+            return Math.PI * radius * radius;
+        }
+        const diceResult = rollDice(6);
+        const areaResult = circleArea(5).toFixed(2);
+        const output = `🧩 Custom Module 'stats_tools' Demo:\n🎲 Dice roll (1-6): ${diceResult}\n📐 Circle area (radius=5): ${areaResult}\n\n📦 Uses: random.randint() simulation, math.pi, custom module import pattern.`;
+        document.getElementById("customModuleOutput").innerHTML = `<pre style="background:#0e1e2a;color:#d4f1f9;border-radius:12px;padding:12px;">${escapeHtml(output)}</pre>`;
+    });
+
+    // PASSWORD GENERATOR (using random & string module simulation)
+    let currentPassword = "";
+    
+    function generatePassword(length, useDigits, usePunct, useUpper) {
+        let lower = "abcdefghijklmnopqrstuvwxyz";
+        let upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let digits = "0123456789";
+        let punct = "!@#$%^&*()_+-=[]{}|;:,.<>?";
+        
+        let charset = lower;
+        if (useUpper) charset += upper;
+        if (useDigits) charset += digits;
+        if (usePunct) charset += punct;
+        
+        if (charset.length === 0) charset = lower + upper;
+        
+        let password = "";
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * charset.length);
+            password += charset[randomIndex];
+        }
+        return password;
+    }
+    
+    function updatePasswordDisplay() {
+        let length = parseInt(document.getElementById("passLength").value, 10);
+        if (isNaN(length) || length < 6) length = 8;
+        if (length > 64) length = 64;
+        const useDigits = document.getElementById("includeDigits").checked;
+        const usePunct = document.getElementById("includePunct").checked;
+        const useUpper = document.getElementById("includeUpper").checked;
+        
+        currentPassword = generatePassword(length, useDigits, usePunct, useUpper);
+        document.getElementById("passwordResult").innerHTML = `🔐 Generated Password (${length} chars):<br><strong style="font-size:1.2rem; word-break:break-all;">${escapeHtml(currentPassword)}</strong><br><span style="font-size:0.7rem;">🔹 Using: random.choice() simulation & string module (ascii letters, digits, punctuation)</span>`;
+    }
+    
+    document.getElementById("generatePasswordBtn").addEventListener("click", updatePasswordDisplay);
+    document.getElementById("copyPasswordBtn").addEventListener("click", () => {
+        if (currentPassword) {
+            navigator.clipboard.writeText(currentPassword).then(() => {
+                alert("✅ Password copied to clipboard!");
+            }).catch(() => {
+                alert("⚠️ Could not copy. Select manually.");
+            });
+        } else {
+            alert("Generate a password first.");
+        }
+    });
+    
+    document.getElementById("explainModulesBtn").addEventListener("click", () => {
+        const explanationDiv = document.getElementById("moduleExplanation");
+        if (explanationDiv.style.display === "none" || !explanationDiv.style.display) {
+            explanationDiv.style.display = "block";
+        } else {
+            explanationDiv.style.display = "none";
+        }
+    });
+    
+    // Initialize password on load
+    setTimeout(() => {
+        updatePasswordDisplay();
+        document.getElementById("moduleExplanation").style.display = "none";
+    }, 100);
+    
+    // Custom Module Simulation (create and use your own module)
+    document.getElementById("runCustomModuleSim").addEventListener("click", () => {
+        // Simulating a custom module 'mymodule' with functions
+        function greet(name, greeting = "Hello") {
+            return `${greeting}, ${name}!`;
+        }
+        function add(a, b) {
+            return a + b;
+        }
+        function isEven(num) {
+            return num % 2 === 0;
+        }
+        
+        const greetResult = greet("Python Learner");
+        const addResult = add(5, 3);
+        const evenResult = isEven(10);
+        
+        const output = `📂 Custom Module 'mymodule' Simulation:\n\n🔹 from mymodule import greet, add, is_even\n\n✨ greet("Python Learner") → "${greetResult}"\n✨ add(5, 3) → ${addResult}\n✨ is_even(10) → ${evenResult}\n\n💡 This demonstrates how to create a .py file and import functions.`;
+        document.getElementById("customModuleSimOutput").innerHTML = `<pre style="background:#0e1e2a;color:#d4f1f9;border-radius:12px;padding:12px;">${escapeHtml(output)}</pre>`;
+    });
+
+    // Additional: Showcase random & datetime module usage in console hint
+    console.log("Day 9 Interactive: Modules (os, sys, random, datetime, math) + Custom Module + Password Generator");
+</script>
+</body>
+</html>
