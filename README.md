@@ -4,42 +4,30 @@
 # Week 1–2: Foundations
    ## Day 1–2: Basics - https://fedexdilip-01.github.io/python/pday1.html
 Python installation, IDE (VS Code, PyCharm, or Jupyter)
-
 Variables, data types (int, float, str, bool)
-
 Basic input/output (print(), input())
-
 Exercise: Create a "Hello, World!" + user greeting program
 
-# Day 3–4: Control Flow -- https://fedexdilip-01.github.io/python/pday2.html
+## Day 3–4: Control Flow -- https://fedexdilip-01.github.io/python/pday2.html
 Conditional statements (if, elif, else)
-
 Loops (for, while)
-
 break, continue, pass
-
 Exercise: Build a number guessing game
 
-# Day 5–6: Data Structures
+## Day 5–6: Data Structures--- https://fedexdilip-01.github.io/python/pday3.html
 Lists, tuples, dictionaries, sets
-
 Indexing, slicing, list comprehensions
-
 Exercise: Create a to-do list manager
 
-# Day 7: String Manipulation & Functions
+## Day 7: String Manipulation & Functions-https://fedexdilip-01.github.io/python/pday7.html
 String methods, formatting (f-strings, .format())
-
 Defining functions, return, default arguments, *args, **kwargs
-
 Exercise: Write a function to check palindrome or anagram
 
-# Week 3–4: Intermediate
+## Week 3–4: Intermediate
 Day 8: File Handling & Exception Handling
 Read/write files (.txt, .csv)
-
 try, except, finally, custom exceptions
-
 Project: Simple log file analyzer
 
 # Day 9: Modules & Packages
