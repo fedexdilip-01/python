@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Day 10: NumPy & Pandas Intro | Install pip | Arrays, Series, DataFrame | Analyze Dataset</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f4fa 0%, #e8edf3 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: #1a2c3e;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #1f5e7e, #0e4b63);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: #2c5368;
+            background: rgba(255, 255, 250, 0.85);
+            backdrop-filter: blur(2px);
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 1.8rem;
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 22px 35px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: #1f3b4c;
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-header span {
+            font-size: 1.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .what-why-where {
+            background: #eef3fa;
+            border-radius: 1.2rem;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            border-left: 4px solid #2c7da0;
+        }
+
+        .what-why-where strong {
+            color: #1f5e7e;
+        }
+
+        pre {
+            background: #0e1e2a;
+            color: #e2f0fa;
+            padding: 1rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: #eef2f5;
+            padding: 0.2rem 0.45rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #c7254e;
+        }
+
+        .example-title {
+            font-weight: 700;
+            margin: 1rem 0 0.3rem 0;
+            color: #0f3b4c;
+            border-left: 3px solid #2c7da0;
+            padding-left: 0.7rem;
+        }
+
+        .output-demo {
+            background: #f0f4f9;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-top: 0.8rem;
+            font-family: monospace;
+            border: 1px dashed #bdd4e7;
+            color: #1f4e6e;
+            font-size: 0.85rem;
+        }
+
+        .btn-run {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-run:hover {
+            background: #1f5e7e;
+            transform: scale(0.97);
+        }
+
+        .project-box {
+            background: linear-gradient(135deg, #ffffff, #fefefe);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            margin: 2rem 0 1rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #cde3f0;
+        }
+
+        .dataset-viz {
+            background: #f7fafd;
+            border-radius: 1.4rem;
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            background: #eef3fc;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #3d6b8c;
+            font-size: 0.85rem;
+            border-top: 1px solid #cbdde9;
+            padding-top: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        th, td {
+            border: 1px solid #cbdde9;
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        th {
+            background: #e2edf2;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>📊 Day 10: NumPy & Pandas Introduction</h1>
+        <p>pip install · NumPy arrays · Pandas Series & DataFrame · Read CSV · 📈 Analyze Student Grades Dataset</p>
+    </div>
+
+    <!-- Grid: Core Concepts -->
+    <div class="grid">
+        <div class="card">
+            <div class="card-header"><span>📦</span> pip & Library Installation</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — <code>pip install numpy pandas</code> installs libraries from PyPI.<br>
+                    <strong>💡 WHY</strong> — Extend Python with powerful data analysis tools.<br>
+                    <strong>📍 WHERE</strong> — Terminal, command prompt, Jupyter, VS Code terminal.
+                </div>
+                <pre><code># Install libraries
+pip install numpy pandas
+
+# Import in your script
+import numpy as np
+import pandas as pd</code></pre>
+                <div class="output-demo">✅ <strong>Tip:</strong> Use <code>pip list</code> to see installed packages.</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>🔢</span> NumPy Arrays & Operations</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — NumPy provides N-dimensional arrays, vectorized math, broadcasting.<br>
+                    <strong>💡 WHY</strong> — Fast numerical computations, less loops, memory efficient.<br>
+                    <strong>📍 WHERE</strong> — Scientific computing, ML preprocessing, image processing.
+                </div>
+                <pre><code>import numpy as np
+
+arr = np.array([1,2,3,4,5])
+print(arr * 2)        # [2,4,6,8,10]
+print(arr.mean())     # 3.0
+matrix = np.array([[1,2],[3,4]])</code></pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>🐼</span> Pandas Series & DataFrame</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Series = 1D labeled array, DataFrame = 2D table (like Excel).<br>
+                    <strong>💡 WHY</strong> — Data cleaning, transformation, aggregation made easy.<br>
+                    <strong>📍 WHERE</strong> — Data analysis, CSV/Excel handling, time series.
+                </div>
+                <pre><code>import pandas as pd
+
+df = pd.DataFrame({
+    'Name': ['Alice', 'Bob'],
+    'Score': [85, 92]
+})
+print(df.head())
+print(df['Score'].mean())</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- TWO COMPLETE EXAMPLES with WHAT/WHY/HOW/WHERE -->
+    <div style="margin-bottom: 2rem;">
+        <div class="card" style="margin-bottom: 1.8rem;">
+            <div class="card-header"><span>📘 EXAMPLE 1</span> — NumPy Array Operations Demo</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Create NumPy arrays, perform element-wise operations, aggregation.<br>
+                    <strong>💡 WHY</strong> — Show vectorized computation (faster than Python loops).<br>
+                    <strong>📍 WHERE</strong> — Mathematical modeling, signal processing, statistics.<br>
+                    <strong>⚙️ HOW</strong> — Use <code>np.array()</code>, arithmetic, <code>.sum()</code>, <code>.mean()</code>, broadcasting.
+                </div>
+                <pre><code>import numpy as np
+
+# Create array & operations
+scores = np.array([78, 85, 92, 88, 76])
+scores_plus_bonus = scores + 5
+average = scores.mean()
+print(f"Original: {scores}")
+print(f"+5 bonus: {scores_plus_bonus}")
+print(f"Average: {average:.1f}")</code></pre>
+                <button class="btn-run" id="runNumpyDemo">🔢 Run NumPy Demo</button>
+                <div id="numpyOutput" class="output-demo">💡 Click to see NumPy array operations in action</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>📘 EXAMPLE 2</span> — Pandas DataFrame from Dictionary</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Create DataFrame, explore data, compute descriptive statistics.<br>
+                    <strong>💡 WHY</strong> — Understand tabular data structure, prepare for CSV analysis.<br>
+                    <strong>📍 WHERE</strong> — Data exploration, reporting, business analytics.<br>
+                    <strong>⚙️ HOW</strong> — <code>pd.DataFrame()</code>, <code>.describe()</code>, column selection.
+                </div>
+                <pre><code>import pandas as pd
+
+data = {
+    'Student': ['Anna', 'Brian', 'Carla', 'David'],
+    'Math': [88, 76, 95, 82],
+    'Science': [91, 85, 93, 79],
+    'English': [85, 88, 90, 84]
+}
+df = pd.DataFrame(data)
+print(df.describe())</code></pre>
+                <button class="btn-run" id="runPandasDemo">🐼 Run Pandas DataFrame Demo</button>
+                <div id="pandasOutput" class="output-demo">💡 Click to see DataFrame and statistics</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXERCISE: Analyze Student Grades Dataset (CSV simulation) -->
+    <div class="project-box">
+        <h2 style="display: flex; align-items: center; gap: 12px;">📈 Exercise: Analyze Student Grades Dataset</h2>
+        <p><strong>What:</strong> Load and analyze a small dataset (student grades) using Pandas.<br>
+        <strong>Why:</strong> Real data analysis workflow — read CSV, compute statistics, find insights.<br>
+        <strong>Where:</strong> Education analytics, grading systems, performance tracking.<br>
+        <strong>How:</strong> Use Pandas to read CSV (simulated), calculate mean, max, min, filter high achievers.</p>
+        
+        <div class="dataset-viz">
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                <button id="loadDatasetBtn" class="btn-run" style="background: #1f6e8c;">📂 Load Student Dataset</button>
+                <button id="showStatsBtn" class="btn-run">📊 Show Statistics</button>
+                <button id="filterTopBtn" class="btn-run">⭐ Show Top Performers (>85 avg)</button>
+            </div>
+            
+            <div id="datasetPreview">
+                <div class="output-demo" style="background: #eef3fc;">💡 Click "Load Student Dataset" to load grades.csv simulation</div>
+            </div>
+            
+            <div id="statsResult" style="margin-top: 1rem;"></div>
+            
+            <div style="margin-top: 1rem; font-size: 0.85rem; background: #eef3fc; border-radius: 1rem; padding: 0.7rem;">
+                💡 <strong>Pandas operations used:</strong> <code>pd.read_csv()</code>, <code>.head()</code>, <code>.describe()</code>, 
+                <code>.mean()</code>, <code>.max()</code>, filtering with boolean indexing, <code>.loc[]</code>.
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive NumPy & Pandas Playground -->
+    <div class="project-box">
+        <h2 style="display: flex; align-items: center; gap: 12px;">🧪 Live Playground: NumPy + Pandas in Action</h2>
+        <p>Test NumPy array operations and Pandas filtering interactively.</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+            <div style="background: #f7fafd; border-radius: 1rem; padding: 1rem;">
+                <h3>🔢 NumPy Array Builder</h3>
+                <input type="text" id="arrayInput" placeholder="Enter numbers: 1,2,3,4,5" value="10,20,30,40,50" style="width:100%; padding: 6px; border-radius: 30px; border: 1px solid #bdd4e7; margin: 8px 0;">
+                <button id="numpyComputeBtn" class="btn-run">Compute Mean & Sum</button>
+                <div id="numpyLiveResult" class="output-demo" style="margin-top: 8px;">Ready</div>
+            </div>
+            
+            <div style="background: #f7fafd; border-radius: 1rem; padding: 1rem;">
+                <h3>🐼 Pandas Filter Demo</h3>
+                <p>Filter students by minimum grade:</p>
+                <input type="number" id="minGradeFilter" placeholder="Min grade" value="80" style="width:100px; padding: 6px; border-radius: 30px; border: 1px solid #bdd4e7;">
+                <button id="filterGradesBtn" class="btn-run">Apply Filter</button>
+                <div id="pandasLiveResult" class="output-demo" style="margin-top: 8px;">Set min grade and click</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        📌 Day 10: pip install numpy pandas | NumPy arrays (vectorized ops) | Pandas Series/DataFrame | Reading CSV | ✅ Student Grades Analysis Project
+    </footer>
+</div>
+
+<script>
+    // Helper: escape HTML
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // EXAMPLE 1: NumPy Demo
+    document.getElementById("runNumpyDemo").addEventListener("click", () => {
+        // Simulate NumPy array operations
+        const scores = [78, 85, 92, 88, 76];
+        const scoresPlusBonus = scores.map(x => x + 5);
+        const average = scores.reduce((a,b) => a + b, 0) / scores.length;
+        
+        const output = `🔢 NumPy Array Operations Demo:\n\n📊 Original array: [${scores.join(", ")}]\n✨ +5 bonus: [${scoresPlusBonus.join(", ")}]\n📈 Mean (average): ${average.toFixed(1)}\n📐 Sum: ${scores.reduce((a,b)=>a+b,0)}\n\n💡 Vectorized operations (element-wise) are fast and efficient.`;
+        document.getElementById("numpyOutput").innerHTML = `<pre style="background:#0e1e2a;color:#d4f1f9;border-radius:12px;padding:12px;">${escapeHtml(output)}</pre>`;
+    });
+
+    // EXAMPLE 2: Pandas DataFrame Demo
+    document.getElementById("runPandasDemo").addEventListener("click", () => {
+        const data = {
+            'Student': ['Anna', 'Brian', 'Carla', 'David'],
+            'Math': [88, 76, 95, 82],
+            'Science': [91, 85, 93, 79],
+            'English': [85, 88, 90, 84]
+        };
+        
+        const mathMean = (88+76+95+82)/4;
+        const scienceMean = (91+85+93+79)/4;
+        const englishMean = (85+88+90+84)/4;
+        
+        const output = `🐼 Pandas DataFrame Demo:\n\n📋 DataFrame (first 4 rows):\n${Object.keys(data).join(" | ")}\n${data.Student.join(" | ")}\n${data.Math.join(" | ")}\n${data.Science.join(" | ")}\n${data.English.join(" | ")}\n\n📊 Descriptive Statistics:\nMath mean: ${mathMean}\nScience mean: ${scienceMean}\nEnglish mean: ${englishMean}\n\n💡 Use .describe() for full stats (count, mean, std, min, max).`;
+        document.getElementById("pandasOutput").innerHTML = `<pre style="background:#0e1e2a;color:#d4f1f9;border-radius:12px;padding:12px;">${escapeHtml(output)}</pre>`;
+    });
+
+    // ---------- STUDENT DATASET ANALYSIS (Simulate CSV) ----------
+    const studentData = [
+        { Name: "Emma Johnson", Math: 88, Science: 92, English: 85, History: 78 },
+        { Name: "Liam Smith", Math: 76, Science: 81, English: 79, History: 82 },
+        { Name: "Sophia Garcia", Math: 95, Science: 94, English: 96, History: 91 },
+        { Name: "Noah Williams", Math: 82, Science: 79, English: 84, History: 80 },
+        { Name: "Olivia Brown", Math: 91, Science: 88, English: 90, History: 87 },
+        { Name: "Mason Jones", Math: 67, Science: 72, English: 70, History: 68 },
+        { Name: "Isabella Miller", Math: 89, Science: 93, English: 88, History: 92 },
+        { Name: "Ethan Davis", Math: 78, Science: 85, English: 81, History: 79 }
+    ];
+    
+    function getDataFrameAsHTML() {
+        let html = '<table><thead><tr><th>Name</th><th>Math</th><th>Science</th><th>English</th><th>History</th><th>Avg Score</th></tr></thead><tbody>';
+        studentData.forEach(student => {
+            const avg = ((student.Math + student.Science + student.English + student.History) / 4).toFixed(1);
+            html += `<tr>
+                <td>${escapeHtml(student.Name)}</td>
+                <td>${student.Math}</td>
+                <td>${student.Science}</td>
+                <td>${student.English}</td>
+                <td>${student.History}</td>
+                <td><strong>${avg}</strong></td>
+            </tr>`;
+        });
+        html += '</tbody></table>';
+        return html;
+    }
+    
+    function calculateStatistics() {
+        const allScores = [];
+        studentData.forEach(s => {
+            allScores.push(s.Math, s.Science, s.English, s.History);
+        });
+        const avgOverall = (allScores.reduce((a,b)=>a+b,0) / allScores.length).toFixed(1);
+        const maxScore = Math.max(...allScores);
+        const minScore = Math.min(...allScores);
+        
+        const subjectMeans = {
+            Math: (studentData.reduce((sum,s)=>sum+s.Math,0)/studentData.length).toFixed(1),
+            Science: (studentData.reduce((sum,s)=>sum+s.Science,0)/studentData.length).toFixed(1),
+            English: (studentData.reduce((sum,s)=>sum+s.English,0)/studentData.length).toFixed(1),
+            History: (studentData.reduce((sum,s)=>sum+s.History,0)/studentData.length).toFixed(1)
+        };
+        
+        return { avgOverall, maxScore, minScore, subjectMeans };
+    }
+    
+    document.getElementById("loadDatasetBtn").addEventListener("click", () => {
+        const html = `<div class="output-demo" style="background:#eef3fc;"><strong>📂 grades.csv loaded (8 students, 4 subjects)</strong><br><br>${getDataFrameAsHTML()}<br><span style="font-size:0.8rem;">✅ Using pd.read_csv() simulation — DataFrame with .head() preview</span></div>`;
+        document.getElementById("datasetPreview").innerHTML = html;
+        document.getElementById("statsResult").innerHTML = "";
+    });
+    
+    document.getElementById("showStatsBtn").addEventListener("click", () => {
+        const stats = calculateStatistics();
+        const html = `<div class="output-demo" style="background:#eef3fc;">
+            <strong>📊 DataFrame Statistics (.describe() simulation)</strong><br><br>
+            📈 <strong>Overall Average Score:</strong> ${stats.avgOverall}<br>
+            🔼 <strong>Highest Score (any subject):</strong> ${stats.maxScore}<br>
+            🔽 <strong>Lowest Score (any subject):</strong> ${stats.minScore}<br><br>
+            <strong>📚 Subject Averages:</strong><br>
+            • Math: ${stats.subjectMeans.Math}<br>
+            • Science: ${stats.subjectMeans.Science}<br>
+            • English: ${stats.subjectMeans.English}<br>
+            • History: ${stats.subjectMeans.History}<br><br>
+            💡 Pandas provides .mean(), .max(), .min(), .describe() for quick insights.
+        </div>`;
+        document.getElementById("statsResult").innerHTML = html;
+    });
+    
+    document.getElementById("filterTopBtn").addEventListener("click", () => {
+        const topStudents = studentData.filter(s => {
+            const avg = (s.Math + s.Science + s.English + s.History) / 4;
+            return avg > 85;
+        });
+        if (topStudents.length === 0) {
+            document.getElementById("statsResult").innerHTML = `<div class="output-demo">⭐ No students with average > 85.</div>`;
+        } else {
+            let html = `<div class="output-demo"><strong>⭐ Top Performers (Average > 85)</strong><br><br><table><tr><th>Name</th><th>Avg Score</th></tr>`;
+            topStudents.forEach(s => {
+                const avg = ((s.Math + s.Science + s.English + s.History) / 4).toFixed(1);
+                html += `<tr><td>${escapeHtml(s.Name)}</td><td>${avg}</td></tr>`;
+            });
+            html += `</table><br>💡 Filtering using boolean indexing: df[df['Average'] > 85]</div>`;
+            document.getElementById("statsResult").innerHTML = html;
+        }
+    });
+    
+    // NumPy Live Playground
+    document.getElementById("numpyComputeBtn").addEventListener("click", () => {
+        const inputStr = document.getElementById("arrayInput").value;
+        const numbers = inputStr.split(',').map(n => parseFloat(n.trim())).filter(n => !isNaN(n));
+        if (numbers.length === 0) {
+            document.getElementById("numpyLiveResult").innerHTML = "❌ Please enter valid numbers (e.g., 1,2,3)";
+            return;
+        }
+        const sum = numbers.reduce((a,b) => a + b, 0);
+        const mean = sum / numbers.length;
+        const doubled = numbers.map(n => n * 2);
+        document.getElementById("numpyLiveResult").innerHTML = `<strong>NumPy-style Results:</strong><br>📊 Array: [${numbers.join(", ")}]<br>➕ Sum: ${sum}<br>📈 Mean: ${mean.toFixed(2)}<br>✨ Doubled: [${doubled.join(", ")}]`;
+    });
+    
+    // Pandas Live Filter on dataset
+    document.getElementById("filterGradesBtn").addEventListener("click", () => {
+        const minGrade = parseFloat(document.getElementById("minGradeFilter").value);
+        if (isNaN(minGrade)) {
+            document.getElementById("pandasLiveResult").innerHTML = "❌ Enter a valid number";
+            return;
+        }
+        // find students with any subject below minGrade? Actually filter students where all subjects >= minGrade
+        const filtered = studentData.filter(s => s.Math >= minGrade && s.Science >= minGrade && s.English >= minGrade && s.History >= minGrade);
+        if (filtered.length === 0) {
+            document.getElementById("pandasLiveResult").innerHTML = `No students have all subjects ≥ ${minGrade}`;
+        } else {
+            let html = `<strong>✅ Students with all grades ≥ ${minGrade}:</strong><br>`;
+            filtered.forEach(s => {
+                html += `• ${escapeHtml(s.Name)} (M:${s.Math}, Sc:${s.Science}, En:${s.English}, Hi:${s.History})<br>`;
+            });
+            html += `<br>💡 Pandas filtering: df[(df['Math'] >= min) & (df['Science'] >= min)]`;
+            document.getElementById("pandasLiveResult").innerHTML = html;
+        }
+    });
+    
+    // Initialize with dataset preview hint
+    setTimeout(() => {
+        // nothing
+    }, 100);
+</script>
+</body>
+</html>
