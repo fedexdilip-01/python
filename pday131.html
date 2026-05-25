@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Day 13: API & Web Scraping | Requests, JSON, BeautifulSoup | Currency Exchange & Quotes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f4fa 0%, #e8edf3 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: #1a2c3e;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #1f5e7e, #0e4b63);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: #2c5368;
+            background: rgba(255, 255, 250, 0.85);
+            backdrop-filter: blur(2px);
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 1.8rem;
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 22px 35px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: #1f3b4c;
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-header span {
+            font-size: 1.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .what-why-where {
+            background: #eef3fa;
+            border-radius: 1.2rem;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            border-left: 4px solid #2c7da0;
+        }
+
+        .what-why-where strong {
+            color: #1f5e7e;
+        }
+
+        pre {
+            background: #0e1e2a;
+            color: #e2f0fa;
+            padding: 1rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: #eef2f5;
+            padding: 0.2rem 0.45rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #c7254e;
+        }
+
+        .example-title {
+            font-weight: 700;
+            margin: 1rem 0 0.3rem 0;
+            color: #0f3b4c;
+            border-left: 3px solid #2c7da0;
+            padding-left: 0.7rem;
+        }
+
+        .output-demo {
+            background: #f0f4f9;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-top: 0.8rem;
+            font-family: monospace;
+            border: 1px dashed #bdd4e7;
+            color: #1f4e6e;
+            font-size: 0.85rem;
+        }
+
+        .btn-run {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-run:hover {
+            background: #1f5e7e;
+            transform: scale(0.97);
+        }
+
+        .project-box {
+            background: linear-gradient(135deg, #ffffff, #fefefe);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            margin: 2rem 0 1rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #cde3f0;
+        }
+
+        .api-interface, .scrape-interface {
+            background: #f7fafd;
+            border-radius: 1.4rem;
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .currency-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 1rem 0;
+            align-items: flex-end;
+        }
+
+        .currency-select {
+            padding: 10px 16px;
+            border-radius: 40px;
+            border: 1px solid #bdd4e7;
+            background: white;
+            font-size: 1rem;
+        }
+
+        .rate-display {
+            background: linear-gradient(135deg, #1f3b4c, #1a2f3e);
+            color: white;
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .rate-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .quote-card {
+            background: #eef3fc;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-style: italic;
+            border-left: 4px solid #2c7da0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #3d6b8c;
+            font-size: 0.85rem;
+            border-top: 1px solid #cbdde9;
+            padding-top: 2rem;
+        }
+
+        .inline-code {
+            background: #eef2f5;
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🌐 Day 13: API & Web Scraping</h1>
+        <p>requests.get() · JSON parsing · BeautifulSoup (HTML parsing) · 💰 Live Currency Exchange · 📜 Quote Scraper</p>
+    </div>
+
+    <!-- Grid: Core Concepts -->
+    <div class="grid">
+        <div class="card">
+            <div class="card-header"><span>📡</span> requests & JSON APIs</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — <code>requests.get(url)</code> fetches data from APIs. <code>.json()</code> parses JSON response.<br>
+                    <strong>💡 WHY</strong> — Access live data: weather, currency, news, stock prices.<br>
+                    <strong>📍 WHERE</strong> — Web apps, data pipelines, bots, financial tools.
+                </div>
+                <pre><code>import requests
+
+response = requests.get("https://api.example.com/data")
+data = response.json()
+print(data["key"])</code></pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>🕸️</span> BeautifulSoup – HTML Parsing</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — <code>BeautifulSoup(html, 'html.parser')</code> extracts data from HTML.<br>
+                    <strong>💡 WHY</strong> — Scrape websites without official APIs (quotes, products, articles).<br>
+                    <strong>📍 WHERE</strong> — Price monitoring, research, content aggregation.
+                </div>
+                <pre><code>from bs4 import BeautifulSoup
+
+soup = BeautifulSoup(html, 'html.parser')
+quotes = soup.find_all('div', class_='quote')
+for q in quotes:
+    print(q.text)</code></pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>⚙️</span> Error Handling & Best Practices</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Try/except for network errors, status code checks, timeouts.<br>
+                    <strong>💡 WHY</strong> — Robust apps don't crash on failed requests.<br>
+                    <strong>📍 WHERE</strong> — Production systems, scheduled tasks.
+                </div>
+                <pre><code>try:
+    r = requests.get(url, timeout=5)
+    r.raise_for_status()
+    data = r.json()
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- TWO COMPLETE EXAMPLES with WHAT/WHY/HOW/WHERE -->
+    <div style="margin-bottom: 2rem;">
+        <div class="card" style="margin-bottom: 1.8rem;">
+            <div class="card-header"><span>📘 EXAMPLE 1</span> — JSONPlaceholder API (requests + JSON parsing)</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Fetch sample posts from JSONPlaceholder (free fake API).<br>
+                    <strong>💡 WHY</strong> — Learn API workflow: GET request → JSON response → extract data.<br>
+                    <strong>📍 WHERE</strong> — Testing, prototyping, learning API integration.<br>
+                    <strong>⚙️ HOW</strong> — <code>requests.get()</code>, <code>.json()</code>, iterate through results.
+                </div>
+                <pre><code>import requests
+
+response = requests.get("https://jsonplaceholder.typicode.com/posts/1")
+post = response.json()
+print(f"Title: {post['title']}")
+print(f"Body: {post['body']}")</code></pre>
+                <button class="btn-run" id="runApiDemo">📡 Fetch Sample Post (JSON API)</button>
+                <div id="apiOutput" class="output-demo">💡 Click to fetch data from JSONPlaceholder API</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>📘 EXAMPLE 2</span> — BeautifulSoup: Extract Quotes from HTML Simulation</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Parse simulated HTML to extract famous quotes and authors.<br>
+                    <strong>💡 WHY</strong> — Understand scraping logic: find elements by class/tag.<br>
+                    <strong>📍 WHERE</strong> — Quote collectors, content parsers, data mining.<br>
+                    <strong>⚙️ HOW</strong> — Create HTML string, BeautifulSoup parses, <code>.find_all()</code>.
+                </div>
+                <pre><code>from bs4 import BeautifulSoup
+
+html = '''&lt;div class="quote"&gt;
+    &lt;span class="text"&gt;The only limit is your mind.&lt;/span&gt;
+    &lt;span class="author"&gt;Einstein&lt;/span&gt;
+&lt;/div&gt;'''
+
+soup = BeautifulSoup(html, 'html.parser')
+quotes = soup.find_all('div', class_='quote')</code></pre>
+                <button class="btn-run" id="runScrapeDemo">🕸️ Run BeautifulSoup Scraper Demo</button>
+                <div id="scrapeOutput" class="output-demo">💡 Click to extract quotes from simulated HTML</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXERCISE 1: Live Currency Exchange Rates (Free API) -->
+    <div class="project-box">
+        <h2 style="display: flex; align-items: center; gap: 12px;">💰 Exercise: Live Currency Exchange Rates</h2>
+        <p><strong>What:</strong> Fetch real-time exchange rates using free API (Frankfurter / ExchangeRate-API).<br>
+        <strong>Why:</strong> Real-world API integration — convert currencies, financial apps.<br>
+        <strong>Where:</strong> Travel apps, e-commerce, banking tools.<br>
+        <strong>How:</strong> <code>requests.get()</code> to free API, JSON parsing, display conversion.</p>
+        
+        <div class="api-interface">
+            <div class="currency-row">
+                <div>
+                    <label>From:</label><br>
+                    <select id="fromCurrency" class="currency-select">
+                        <option value="USD">USD - US Dollar</option>
+                        <option value="EUR">EUR - Euro</option>
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="JPY">JPY - Japanese Yen</option>
+                        <option value="INR" selected>INR - Indian Rupee</option>
+                        <option value="CAD">CAD - Canadian Dollar</option>
+                        <option value="AUD">AUD - Australian Dollar</option>
+                    </select>
+                </div>
+                <div>
+                    <label>To:</label><br>
+                    <select id="toCurrency" class="currency-select">
+                        <option value="USD">USD - US Dollar</option>
+                        <option value="EUR" selected>EUR - Euro</option>
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="JPY">JPY - Japanese Yen</option>
+                        <option value="INR">INR - Indian Rupee</option>
+                        <option value="CAD">CAD - Canadian Dollar</option>
+                        <option value="AUD">AUD - Australian Dollar</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Amount:</label><br>
+                    <input type="number" id="amountInput" value="100" step="any" style="padding: 10px; border-radius: 40px; border: 1px solid #bdd4e7; width: 120px;">
+                </div>
+                <div>
+                    <button id="fetchRateBtn" class="bank-btn" style="background: #1f6e8c; padding: 10px 24px;">🔄 Get Exchange Rate</button>
+                </div>
+            </div>
+            <div id="rateResult" class="rate-display">
+                💡 Click "Get Exchange Rate" to fetch live data
+            </div>
+            <div style="margin-top: 0.8rem; font-size: 0.75rem; color: #6b8cae;">
+                📡 Using Frankfurter API (free, no API key) — real-time exchange rates
+            </div>
+        </div>
+    </div>
+
+    <!-- EXERCISE 2: Scrape Quotes (Simulated BeautifulSoup Demo) -->
+    <div class="project-box">
+        <h2 style="display: flex; align-items: center; gap: 12px;">📜 Exercise: Scrape Inspirational Quotes</h2>
+        <p><strong>What:</strong> Extract quotes and authors from a simulated HTML page using BeautifulSoup logic.<br>
+        <strong>Why:</strong> Learn HTML parsing, data extraction, and cleaning.<br>
+        <strong>Where:</strong> Content aggregation, sentiment analysis, quote generators.<br>
+        <strong>How:</strong> Provide HTML string → BeautifulSoup → find_all() → extract text.</p>
+        
+        <div class="scrape-interface">
+            <button id="scrapeQuotesBtn" class="btn-run" style="background: #1f6e8c;">🔍 Scrape Quotes from Sample HTML</button>
+            <div id="quotesResult" class="quote-card">
+                💡 Click to extract quotes using simulated BeautifulSoup scraping
+            </div>
+            <div style="margin-top: 0.8rem; font-size: 0.75rem;">
+                🧠 Demonstrates: <code>BeautifulSoup(html, 'html.parser')</code>, <code>.find_all()</code>, <code>.text</code>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Playground: Custom API Tester -->
+    <div class="project-box">
+        <h2 style="display: flex; align-items: center; gap: 12px;">🧪 Live Playground: Test Any Public API</h2>
+        <p>Enter a public API URL and see JSON response (GET request simulation).</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 1rem;">
+            <input type="text" id="apiUrlInput" placeholder="https://api.example.com/data" value="https://jsonplaceholder.typicode.com/posts/1" style="flex: 2; padding: 10px; border-radius: 40px; border: 1px solid #bdd4e7;">
+            <button id="testApiBtn" class="btn-run">🚀 Send GET Request</button>
+        </div>
+        <div id="apiTestResult" class="output-demo" style="margin-top: 1rem; max-height: 300px; overflow-y: auto;">
+            💡 Enter a public API URL and click to see JSON response
+        </div>
+    </div>
+
+    <footer>
+        📌 Day 13: requests.get() · JSON parsing · BeautifulSoup (HTML parsing) · Error Handling · ✅ Live Currency Exchange + Quote Scraper Exercises
+    </footer>
+</div>
+
+<script>
+    // Helper: escape HTML
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    // EXAMPLE 1: API Demo (JSONPlaceholder)
+    document.getElementById("runApiDemo").addEventListener("click", async () => {
+        try {
+            const response = await fetch("https://jsonplaceholder.typicode.com/posts/1");
+            const data = await response.json();
+            const output = `📡 API Request Demo (requests.get + .json()):\n\n📌 Title: ${data.title}\n📝 Body: ${data.body}\n🆔 User ID: ${data.userId}\n\n✨ Demonstrates: GET request → JSON parsing → extracting fields.`;
+            document.getElementById("apiOutput").innerHTML = `<pre style="background:#0e1e2a;color:#d4f1f9;border-radius:12px;padding:12px;">${escapeHtml(output)}</pre>`;
+        } catch (error) {
+            document.getElementById("apiOutput").innerHTML = `<div class="output-demo" style="color: #c06c6c;">❌ Error: ${error.message}</div>`;
+        }
+    });
+
+    // EXAMPLE 2: BeautifulSoup Scraper Demo (simulated)
+    document.getElementById("runScrapeDemo").addEventListener("click", () => {
+        // Simulate HTML content
+        const htmlContent = `
+            <div class="quotes-container">
+                <div class="quote">
+                    <span class="text">"The only limit is your mind."</span>
+                    <span class="author">- Albert Einstein</span>
+                </div>
+                <div class="quote">
+                    <span class="text">"Simplicity is the soul of efficiency."</span>
+                    <span class="author">- Austin Freeman</span>
+                </div>
+                <div class="quote">
+                    <span class="text">"Code is like humor. When you have to explain it, it's bad."</span>
+                    <span class="author">- Cory House</span>
+                </div>
+            </div>
+        `;
+        // Simulate BeautifulSoup parsing (DOM parsing in JS)
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
+        const quoteDivs = doc.querySelectorAll('.quote');
+        let quotesHtml = "";
+        quoteDivs.forEach((quote, idx) => {
+            const text = quote.querySelector('.text')?.innerText || "";
+            const author = quote.querySelector('.author')?.innerText || "";
+            quotesHtml += `${idx+1}. ${text} ${author}<br>`;
+        });
+        const output = `🕸️ BeautifulSoup Scraper Demo:\n\nExtracted Quotes:\n${quotesHtml}\n\n💡 Using: BeautifulSoup(html, 'html.parser'), .find_all('div', class_='quote')`;
+        document.getElementById("scrapeOutput").innerHTML = `<pre style="background:#0e1e2a;color:#d4f1f9;border-radius:12px;padding:12px;">${escapeHtml(output)}</pre>`;
+    });
+
+    // EXERCISE 1: Live Currency Exchange (Frankfurter API)
+    async function fetchExchangeRate(from, to, amount) {
+        const url = `https://api.frankfurter.app/latest?from=${from}&to=${to}`;
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            const rate = data.rates[to];
+            const converted = amount * rate;
+            return { success: true, rate, converted, from, to, amount };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+
+    document.getElementById("fetchRateBtn").addEventListener("click", async () => {
+        const from = document.getElementById("fromCurrency").value;
+        const to = document.getElementById("toCurrency").value;
+        const amount = parseFloat(document.getElementById("amountInput").value);
+        
+        if (isNaN(amount) || amount <= 0) {
+            document.getElementById("rateResult").innerHTML = `<div style="color: #ffaaaa;">❌ Please enter a valid amount</div>`;
+            return;
+        }
+        
+        document.getElementById("rateResult").innerHTML = `<div>🔄 Fetching live exchange rate...</div>`;
+        
+        const result = await fetchExchangeRate(from, to, amount);
+        
+        if (result.success) {
+            document.getElementById("rateResult").innerHTML = `
+                <div style="font-size: 1rem;">💱 Exchange Rate (Live)</div>
+                <div class="rate-value">1 ${from} = ${result.rate.toFixed(4)} ${to}</div>
+                <div style="font-size: 1.2rem;">${amount} ${from} = <strong>${result.converted.toFixed(2)} ${to}</strong></div>
+                <div style="font-size: 0.7rem; margin-top: 0.5rem;">📡 Source: Frankfurter API (free, real-time)</div>
+            `;
+        } else {
+            document.getElementById("rateResult").innerHTML = `<div style="color: #ffaaaa;">❌ Error: ${result.error}. Please try again later.</div>`;
+        }
+    });
+
+    // EXERCISE 2: Scrape Quotes (Interactive)
+    document.getElementById("scrapeQuotesBtn").addEventListener("click", () => {
+        const quotesData = [
+            { text: "The only limit is your mind.", author: "Albert Einstein" },
+            { text: "Simplicity is the soul of efficiency.", author: "Austin Freeman" },
+            { text: "Code is like humor. When you have to explain it, it's bad.", author: "Cory House" },
+            { text: "Python: The only limit is your imagination.", author: "Guido van Rossum" },
+            { text: "Beautiful is better than ugly.", author: "Zen of Python" }
+        ];
+        
+        let quotesHtml = `<strong>📜 Scraped Quotes (BeautifulSoup simulation):</strong><br><br>`;
+        quotesData.forEach((q, idx) => {
+            quotesHtml += `<div style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #cde3f0;">✧ "${escapeHtml(q.text)}"<br><span style="font-size: 0.85rem; color: #2c7da0;">— ${escapeHtml(q.author)}</span></div>`;
+        });
+        quotesHtml += `<br>💡 BeautifulSoup method: <code>soup.find_all('div', class_='quote')</code> → extract text & author.`;
+        document.getElementById("quotesResult").innerHTML = quotesHtml;
+    });
+
+    // Live Playground: Test Custom API
+    document.getElementById("testApiBtn").addEventListener("click", async () => {
+        const url = document.getElementById("apiUrlInput").value.trim();
+        if (!url) {
+            document.getElementById("apiTestResult").innerHTML = `<div style="color: #c06c6c;">❌ Please enter a valid API URL</div>`;
+            return;
+        }
+        
+        document.getElementById("apiTestResult").innerHTML = `<div>⏳ Sending GET request to ${escapeHtml(url)}...</div>`;
+        
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            const data = await response.json();
+            const prettyJson = JSON.stringify(data, null, 2);
+            const output = `✅ GET Request Successful!\n\n📡 URL: ${url}\n📊 Status: ${response.status}\n\n📦 JSON Response:\n${prettyJson.substring(0, 1500)}${prettyJson.length > 1500 ? "\n... (truncated)" : ""}`;
+            document.getElementById("apiTestResult").innerHTML = `<pre style="background:#0e1e2a;color:#d4f1f9;border-radius:12px;padding:12px;overflow-x:auto;font-size:0.75rem;">${escapeHtml(output)}</pre>`;
+        } catch (error) {
+            document.getElementById("apiTestResult").innerHTML = `<div style="color: #c06c6c;">❌ Error: ${error.message}<br><br>⚠️ Note: Some APIs require API keys or have CORS restrictions. Try JSONPlaceholder (https://jsonplaceholder.typicode.com/posts/1)</div>`;
+        }
+    });
+
+    // Set default demo for API test
+    setTimeout(() => {
+        document.getElementById("testApiBtn").click();
+    }, 300);
+</script>
+</body>
+</html>
