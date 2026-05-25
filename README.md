@@ -75,7 +75,8 @@ BeautifulSoup – extract data from HTML
 
 Exercise: Fetch live currency exchange rates or scrape quotes
 
-# Day 14: Final Project (Choose one)
+# Day 14: Final Project (Choose one) -https://fedexdilip-01.github.io/python/pday14.html
+
 CLI Calculator with history
 
 Weather App using OpenWeatherMap API
