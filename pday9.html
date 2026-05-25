@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Python Intermediate: File Handling, Exceptions, Modules | Log Analyzer & Password Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f1f4f9 0%, #e9eef4 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: #1a2c3e;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #1f5e7e, #0e4b63);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: #2c5368;
+            background: rgba(255, 255, 250, 0.85);
+            backdrop-filter: blur(2px);
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 1.8rem;
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 22px 35px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: #1f3b4c;
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-header span {
+            font-size: 1.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .what-why-where {
+            background: #eef3fa;
+            border-radius: 1.2rem;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            border-left: 4px solid #2c7da0;
+        }
+
+        .what-why-where strong {
+            color: #1f5e7e;
+        }
+
+        pre {
+            background: #0e1e2a;
+            color: #e2f0fa;
+            padding: 1rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: #eef2f5;
+            padding: 0.2rem 0.45rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #c7254e;
+        }
+
+        .example-title {
+            font-weight: 700;
+            margin: 1rem 0 0.3rem 0;
+            color: #0f3b4c;
+            border-left: 3px solid #2c7da0;
+            padding-left: 0.7rem;
+        }
+
+        .output-demo {
+            background: #f0f4f9;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-top: 0.8rem;
+            font-family: monospace;
+            border: 1px dashed #bdd4e7;
+            color: #1f4e6e;
+            font-size: 0.85rem;
+        }
+
+        .btn-run {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-run:hover {
+            background: #1f5e7e;
+            transform: scale(0.97);
+        }
+
+        .project-box {
+            background: linear-gradient(135deg, #ffffff, #fefefe);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            margin: 2rem 0 1rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #cde3f0;
+        }
+
+        .log-simulator, .pass-gen {
+            background: #f7fafd;
+            border-radius: 1.4rem;
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #3d6b8c;
+            font-size: 0.85rem;
+            border-top: 1px solid #cbdde9;
+            padding-top: 2rem;
+        }
+
+        button {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            margin: 4px 4px 0 0;
+        }
+
+        .pass-output {
+            font-family: monospace;
+            background: #0e1e2a;
+            color: #bbf0e6;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>📂 Week 3–4: File Handling · Exceptions · Modules</h1>
+        <p>try/except/finally · read/write .txt/.csv · os, sys, random, datetime · 🔐 Password Generator + Log Analyzer</p>
+    </div>
+
+    <!-- Grid Concepts -->
+    <div class="grid">
+        <div class="card">
+            <div class="card-header"><span>📁</span> File Handling & Exception Handling</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — <code>open()</code>, read/write text/CSV. <code>try/except/finally</code> for graceful error management.<br>
+                    <strong>💡 WHY</strong> — Persist data, handle missing files, avoid crashes.<br>
+                    <strong>📍 WHERE</strong> — Logs, config files, data import/export, robust apps.
+                </div>
+                <pre><code>try:
+    with open("data.txt", "r") as f:
+        content = f.read()
+except FileNotFoundError:
+    print("File missing")
+finally:
+    print("Cleanup done")</code></pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>📦</span> Modules & Packages</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — <code>import os, sys, random, datetime, math</code>. Create your own module.<br>
+                    <strong>💡 WHY</strong> — Reuse code, leverage standard library, organize projects.<br>
+                    <strong>📍 WHERE</strong> — System interactions, random generation, date utilities.
+                </div>
+                <pre><code>import random, datetime
+print(random.randint(1,10))
+print(datetime.date.today())</code></pre>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>🧩</span> Custom Modules & Project Structure</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Create <code>mymodule.py</code> and import functions.<br>
+                    <strong>💡 WHY</strong> — Clean architecture, team collaboration.<br>
+                    <strong>📍 WHERE</strong> — Large applications, library development.
+                </div>
+                <pre><code># mymodule.py
+def greet(name):
+    return f"Hello {name}"
+
+# main.py
+from mymodule import greet</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- TWO COMPLETE EXAMPLES -->
+    <div style="margin-bottom: 2rem;">
+        <div class="card" style="margin-bottom: 1.8rem;">
+            <div class="card-header"><span>📘 EXAMPLE 1</span> — Simple Log File Analyzer (File + Exception Handling)</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Reads a server log file, counts error lines, handles missing file gracefully.<br>
+                    <strong>💡 WHY</strong> — Real-world debugging, automated monitoring, robust I/O.<br>
+                    <strong>📍 WHERE</strong> — DevOps scripts, application health checks.<br>
+                    <strong>⚙️ HOW</strong> — Uses <code>try/except</code>, <code>.readlines()</code>, string methods to filter "ERROR".
+                </div>
+                <pre><code>def analyze_log(filename):
+    try:
+        with open(filename, 'r') as file:
+            lines = file.readlines()
+            error_count = sum(1 for line in lines if "ERROR" in line.upper())
+            return f"Total lines: {len(lines)}, Errors: {error_count}"
+    except FileNotFoundError:
+        return f"❌ File '{filename}' not found."
+    except Exception as e:
+        return f"⚠️ Unexpected error: {e}"
+
+# Simulated usage
+print(analyze_log("sample.log"))</code></pre>
+                <button class="btn-run" id="runLogAnalyzerDemo">📊 Run Log Analyzer (simulated)</button>
+                <div id="logAnalyzerOutput" class="output-demo">💡 Click to analyze a demo virtual log file.</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>📘 EXAMPLE 2</span> — Using Modules: os, datetime, random, math</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Demonstrates importing multiple stdlib modules: get current directory, time, random math.<br>
+                    <strong>💡 WHY</strong> — Show versatility of Python standard library.<br>
+                    <strong>📍 WHERE</strong> — File management, simulations, date-aware programs.<br>
+                    <strong>⚙️ HOW</strong> — Combines <code>os.getcwd()</code>, <code>datetime.now()</code>, <code>math.sqrt()</code>, <code>random.choice()</code>.
+                </div>
+                <pre><code>import os, datetime, random, math
+
+current_dir = os.getcwd()
+now = datetime.datetime.now()
+rand_num = random.randint(1,100)
+sqrt_val = math.sqrt(rand_num)
+
+print(f"Dir: {current_dir}\nTime: {now}\nRandom: {rand_num}, sqrt: {sqrt_val:.2f}")</code></pre>
+                <button class="btn-run" id="runModulesDemo">🔌 Run Modules Demo</button>
+                <div id="modulesOutput" class="output-demo">💡 Click to see os, datetime, random, math in action.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJECT 1: Log File Analyzer Interactive -->
+    <div class="project-box">
+        <h2 style="display: flex; align-items: center; gap: 12px;">📋 Project: Log File Analyzer (with custom exception simulation)</h2>
+        <p>Simulate reading a log file. Demonstrates <code>try/except/finally</code> & file handling concepts.</p>
+        <div class="log-simulator">
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px;">
+                <button id="createSampleLogBtn">📝 Create Sample Log (simulated)</button>
+                <button id="analyzeSampleLogBtn">🔍 Analyze Log File (exception-safe)</button>
+            </div>
+            <div id="logAnalysisResult" class="output-demo" style="background: #0e1e2a; color: #b8e1fc;">📄 Ready. Click 'Create Sample Log' to generate virtual log data.</div>
+            <div style="margin-top: 10px; font-size: 0.75rem;">💡 This simulates file I/O using in-memory representation but fully demonstrates try/except patterns and log parsing.</div>
+        </div>
+    </div>
+
+    <!-- PROJECT 2: Password Generator (random + string) Exercise -->
+    <div class="project-box">
+        <h2 style="display: flex; align-items: center; gap: 12px;">🔐 Password Generator (random + string module)</h2>
+        <p>Build a customizable password generator using <code>random</code>, <code>string</code> (ascii, digits, punctuation).</p>
+        <div class="pass-gen">
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; align-items: flex-end; margin-bottom: 15px;">
+                <div>
+                    <label>Length: </label>
+                    <input type="number" id="passLength" min="6" max="64" value="12" style="width: 80px; padding: 6px; border-radius: 30px; border: 1px solid #ccc;">
+                </div>
+                <div>
+                    <label>Include digits?</label>
+                    <input type="checkbox" id="includeDigits" checked style="width: 18px; height: 18px;">
+                </div>
+                <div>
+                    <label>Include punctuation?</label>
+                    <input type="checkbox" id="includePunct" checked style="width: 18px; height: 18px;">
+                </div>
+                <div>
+                    <button id="generatePassBtn">✨ Generate Strong Password</button>
+                </div>
+            </div>
+            <div id="generatedPassword" class="pass-output">Your password will appear here</div>
+            <div style="margin-top: 12px; font-size: 0.8rem;">🎯 Uses: <code>random.choice()</code>, <code>string.ascii_letters</code>, <code>string.digits</code>, <code>string.punctuation</code>. Customizable, secure generation.</div>
+        </div>
+    </div>
+
+    <footer>
+        🚀 Day 8–9: File I/O, Exception Handling (try/except/finally), Log Analyzer Project | Modules & Packages: os, sys, random, datetime, math, custom modules → Password Generator Exercise
+    </footer>
+</div>
+
+<script>
+    // Helper: escape HTML
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, c => c);
+    }
+
+    // Example 1: Log analyzer demo (simulate file read)
+    document.getElementById("runLogAnalyzerDemo").addEventListener("click", () => {
+        // virtual log content
+        const virtualLog = `2025-01-10 INFO System started
+2025-01-10 ERROR Failed to connect to DB
+2025-01-10 WARN High memory usage
+2025-01-11 ERROR Timeout occurred
+2025-01-11 INFO User login success
+2025-01-11 ERROR Disk quota exceeded`;
+        
+        function analyzeLog(content, filename = "sample.log") {
+            try {
+                if (!content) throw new FileNotFoundError("simulated missing file");
+                const lines = content.split('\n');
+                let errorCount = 0;
+                for (let line of lines) {
+                    if (line.toUpperCase().includes("ERROR")) errorCount++;
+                }
+                return `✅ Analyzed '${filename}': Total lines: ${lines.length}, Errors: ${errorCount}`;
+            } catch (err) {
+                return `❌ Exception: ${err.message}`;
+            }
+        }
+        const result = analyzeLog(virtualLog);
+        document.getElementById("logAnalyzerOutput").innerHTML = `<strong>📊 Log Analyzer Output:</strong><br><pre style="background:#0e1e2a;color:#c8f0e6;border-radius:12px;padding:8px;">${escapeHtml(result)}\n\n📄 Log snippet:\n${escapeHtml(virtualLog.slice(0, 180))}...</pre>`;
+    });
+
+    // Example 2: Modules demo
+    document.getElementById("runModulesDemo").addEventListener("click", () => {
+        const currentDir = "C:/Users/PythonProject (simulated)"; // os.getcwd simulation
+        const now = new Date().toLocaleString();
+        const randNum = Math.floor(Math.random() * 100) + 1;
+        const sqrtVal = Math.sqrt(randNum).toFixed(2);
+        const outputText = `📁 Current Directory (os.getcwd): ${currentDir}\n⏱️ Date/Time (datetime): ${now}\n🎲 Random int (1-100): ${randNum}\n🧮 Math.sqrt: ${sqrtVal}\n💡 Demonstrates importing standard modules.`;
+        document.getElementById("modulesOutput").innerHTML = `<strong>🔌 Modules (os, datetime, random, math):</strong><br><pre style="background:#0e1e2a;color:#d4f1f9;border-radius:12px;padding:10px;">${escapeHtml(outputText)}</pre>`;
+    });
+
+    // ---------- LOG ANALYZER INTERACTIVE (virtual file handling + try/except) ----------
+    let virtualFileSystem = { "app.log": null };
+    function createSampleLog() {
+        virtualFileSystem["app.log"] = `2025-05-20 08:12:32 INFO Starting application
+2025-05-20 08:15:01 ERROR Connection refused to database
+2025-05-20 08:17:44 WARN Retry attempt 1
+2025-05-20 08:18:10 ERROR Authentication failed for user admin
+2025-05-20 08:20:00 INFO Backup completed
+2025-05-20 08:22:33 ERROR Disk write failure`;
+        document.getElementById("logAnalysisResult").innerHTML = `📁 Sample log file 'app.log' created (virtual).<br>Content preview:<br><pre style="background:#0e1e2a; color:#c0e0ff; padding:6px; border-radius:10px;">${escapeHtml(virtualFileSystem["app.log"].substring(0, 200))}...</pre>`;
+    }
+    
+    function analyzeVirtualLog() {
+        try {
+            const content = virtualFileSystem["app.log"];
+            if (!content) throw new Error("FileNotFoundError: app.log does not exist. Please create it first.");
+            const lines = content.split('\n');
+            let errorCount = 0, warnCount = 0;
+            for (let line of lines) {
+                if (line.toUpperCase().includes("ERROR")) errorCount++;
+                if (line.toUpperCase().includes("WARN")) warnCount++;
+            }
+            const finalMsg = `✅ Analysis (try/except handled):\n📄 Lines: ${lines.length}\n🚨 ERROR count: ${errorCount}\n⚠️ WARN count: ${warnCount}\n📌 Exception-safe file reading simulation.`;
+            document.getElementById("logAnalysisResult").innerHTML = `<pre style="background:#0e1e2a; color:#daf6f0; padding:12px; border-radius:14px;">${escapeHtml(finalMsg)}</pre>`;
+        } catch (err) {
+            document.getElementById("logAnalysisResult").innerHTML = `❌ Exception caught: ${err.message}. (Use 'Create Sample Log' first)`;
+        } finally {
+            console.log("Finally block: analysis attempted");
+        }
+    }
+
+    document.getElementById("createSampleLogBtn").addEventListener("click", createSampleLog);
+    document.getElementById("analyzeSampleLogBtn").addEventListener("click", analyzeVirtualLog);
+    
+    // ---------- PASSWORD GENERATOR (using random + string module simulation) ----------
+    function generatePassword(length, useDigits, usePunct) {
+        let charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        if (useDigits) charset += "0123456789";
+        if (usePunct) charset += "!@#$%^&*()_+-=[]{}|;:,.<>?";
+        if (charset.length === 0) charset = "abcdefghijklmnopqrstuvwxyz";
+        let password = "";
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * charset.length);
+            password += charset[randomIndex];
+        }
+        return password;
+    }
+
+    document.getElementById("generatePassBtn").addEventListener("click", () => {
+        let length = parseInt(document.getElementById("passLength").value, 10);
+        const useDigits = document.getElementById("includeDigits").checked;
+        const usePunct = document.getElementById("includePunct").checked;
+        if (isNaN(length) || length < 4) length = 8;
+        if (length > 128) length = 128;
+        const newPassword = generatePassword(length, useDigits, usePunct);
+        document.getElementById("generatedPassword").innerHTML = `🔐 Generated password (${length} chars):<br><strong style="font-size:1.1rem; word-break:break-all;">${escapeHtml(newPassword)}</strong><br><span style="font-size:0.7rem;">Uses random module simulation, string constants (ascii, digits, punctuation).</span>`;
+    });
+
+    // initial demo for password generator
+    setTimeout(() => {
+        document.getElementById("generatePassBtn").click();
+    }, 200);
+    
+    // Optional: custom module concept snippet explanation
+    const customModuleHint = document.createElement('div');
+    customModuleHint.className = 'output-demo';
+    customModuleHint.style.marginTop = '1rem';
+    customModuleHint.style.background = '#e9f2f0';
+    customModuleHint.innerHTML = '📦 <strong>Custom module tip:</strong> Create "mymodule.py" with helper functions, then <code>from mymodule import func</code>. Just like the password generator logic encapsulated.';
+    document.querySelector('.project-box:last-of-type').appendChild(customModuleHint);
+</script>
+</body>
+</html>
