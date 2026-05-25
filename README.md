@@ -68,7 +68,7 @@ Magic methods (__str__, __repr__)
 
 Project: Bank account system (deposit, withdraw, show balance)
 
-# Day 13: API & Web Scraping (Requests, BeautifulSoup)
+# Day 13: API & Web Scraping (Requests, BeautifulSoup)-https://fedexdilip-01.github.io/python/pday13.html
 requests.get(), JSON parsing
 
 BeautifulSoup – extract data from HTML
