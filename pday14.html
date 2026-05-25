@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Day 14: Final Project | Choose Your Path | CLI Calculator, Weather App, Expense Tracker, Web Scraper, To-Do with SQLite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f4fa 0%, #e8edf3 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: #1a2c3e;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #1f5e7e, #0e4b63);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: #2c5368;
+            background: rgba(255, 255, 250, 0.85);
+            backdrop-filter: blur(2px);
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 1.8rem;
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 40px -14px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-card.selected {
+            border: 2px solid #2c7da0;
+            box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.3);
+        }
+
+        .card-header {
+            background: #1f3b4c;
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-header span {
+            font-size: 1.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .what-why-where {
+            background: #eef3fa;
+            border-radius: 1.2rem;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            border-left: 4px solid #2c7da0;
+        }
+
+        .what-why-where strong {
+            color: #1f5e7e;
+        }
+
+        pre {
+            background: #0e1e2a;
+            color: #e2f0fa;
+            padding: 1rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: #eef2f5;
+            padding: 0.2rem 0.45rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #c7254e;
+        }
+
+        .btn-select {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn-select:hover {
+            background: #1f5e7e;
+            transform: scale(0.98);
+        }
+
+        .btn-selected {
+            background: #1f6e8c;
+            opacity: 0.8;
+            cursor: default;
+        }
+
+        .detail-area {
+            background: linear-gradient(135deg, #ffffff, #fefefe);
+            border-radius: 2rem;
+            padding: 1.8rem;
+            margin: 1rem 0 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #cde3f0;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            background: #eef3fc;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            color: #1f5e7e;
+        }
+
+        .demo-output {
+            background: #0e1e2a;
+            color: #d4f1f9;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-top: 1rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #3d6b8c;
+            font-size: 0.85rem;
+            border-top: 1px solid #cbdde9;
+            padding-top: 2rem;
+        }
+
+        .btn-run {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-run:hover {
+            background: #1f5e7e;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🎯 Day 14: Final Project</h1>
+        <p>Choose Your Path — Build a Real-World Python Application</p>
+    </div>
+
+    <!-- Project Selection Grid -->
+    <div class="project-grid" id="projectGrid">
+        <!-- Project 1: CLI Calculator -->
+        <div class="project-card" data-project="calculator">
+            <div class="card-header"><span>🧮</span> CLI Calculator with History</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Command-line calculator with memory and calculation history.<br>
+                    <strong>💡 WHY</strong> — Master functions, loops, data structures, and file I/O.<br>
+                    <strong>📍 WHERE</strong> — Everyday utilities, learning basic app architecture.<br>
+                    <strong>⚙️ HOW</strong> — Store calculations in list, save/load from JSON file.
+                </div>
+                <div class="tech-badge">Python</div>
+                <div class="tech-badge">JSON</div>
+                <div class="tech-badge">File I/O</div>
+                <button class="btn-select" data-project="calculator">📐 Select This Project</button>
+            </div>
+        </div>
+
+        <!-- Project 2: Weather App -->
+        <div class="project-card" data-project="weather">
+            <div class="card-header"><span>🌤️</span> Weather App (OpenWeatherMap API)</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Fetch real-time weather using OpenWeatherMap API.<br>
+                    <strong>💡 WHY</strong> — Learn API integration, JSON parsing, error handling.<br>
+                    <strong>📍 WHERE</strong> — Mobile apps, travel websites, home automation.<br>
+                    <strong>⚙️ HOW</strong> — requests.get(), API key, display temp, humidity, conditions.
+                </div>
+                <div class="tech-badge">Requests</div>
+                <div class="tech-badge">JSON</div>
+                <div class="tech-badge">API</div>
+                <button class="btn-select" data-project="weather">🌍 Select This Project</button>
+            </div>
+        </div>
+
+        <!-- Project 3: Expense Tracker -->
+        <div class="project-card" data-project="expense">
+            <div class="card-header"><span>💰</span> Personal Expense Tracker</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Track expenses, save to CSV, visualize with matplotlib.<br>
+                    <strong>💡 WHY</strong> — Data persistence, CSV handling, basic data visualization.<br>
+                    <strong>📍 WHERE</strong> — Personal finance, budgeting apps, reporting tools.<br>
+                    <strong>⚙️ HOW</strong> — Store expenses in CSV, calculate totals, generate bar charts.
+                </div>
+                <div class="tech-badge">CSV</div>
+                <div class="tech-badge">matplotlib</div>
+                <div class="tech-badge">Pandas</div>
+                <button class="btn-select" data-project="expense">📊 Select This Project</button>
+            </div>
+        </div>
+
+        <!-- Project 4: Web Scraper -->
+        <div class="project-card" data-project="scraper">
+            <div class="card-header"><span>🕸️</span> Web Scraper (Job/News Headlines)</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Extract job listings or news headlines from websites.<br>
+                    <strong>💡 WHY</strong> — Real-world data extraction, BeautifulSoup mastery.<br>
+                    <strong>📍 WHERE</strong> — Market research, content aggregation, price monitoring.<br>
+                    <strong>⚙️ HOW</strong> — requests + BeautifulSoup, parse HTML, save to CSV/JSON.
+                </div>
+                <div class="tech-badge">BeautifulSoup</div>
+                <div class="tech-badge">Requests</div>
+                <div class="tech-badge">HTML Parsing</div>
+                <button class="btn-select" data-project="scraper">🔍 Select This Project</button>
+            </div>
+        </div>
+
+        <!-- Project 5: To-Do CLI with SQLite -->
+        <div class="project-card" data-project="todo">
+            <div class="card-header"><span>✅</span> To-Do CLI with SQLite</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Command-line task manager with persistent SQLite database.<br>
+                    <strong>💡 WHY</strong> — Learn SQL, database operations, CRUD applications.<br>
+                    <strong>📍 WHERE</strong> — Productivity tools, task management systems.<br>
+                    <strong>⚙️ HOW</strong> — SQLite3 module, CREATE TABLE, INSERT, SELECT, UPDATE, DELETE.
+                </div>
+                <div class="tech-badge">SQLite</div>
+                <div class="tech-badge">SQL</div>
+                <div class="tech-badge">CRUD</div>
+                <button class="btn-select" data-project="todo">📝 Select This Project</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Project Information Area -->
+    <div id="detailArea" class="detail-area">
+        <h2 style="margin-bottom: 1rem;">✨ Select a project above to see full details</h2>
+        <p>Click on any project card or the "Select This Project" button to view complete documentation including:</p>
+        <ul style="margin: 1rem 0 0 1.5rem;">
+            <li>📦 Required libraries & installation</li>
+            <li>📁 Project structure & file organization</li>
+            <li>💻 Complete code example with explanation</li>
+            <li>🎯 What, Why, How, Where breakdown</li>
+            <li>🧪 Interactive demo / simulation</li>
+        </ul>
+    </div>
+
+    <footer>
+        🚀 Final Project — Choose one, build it, and add to your portfolio! Each project demonstrates real-world Python skills.
+    </footer>
+</div>
+
+<script>
+    // Escape HTML helper
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Project details data
+    const projectDetails = {
+        calculator: {
+            name: "CLI Calculator with History",
+            icon: "🧮",
+            what: "A command-line calculator that stores calculation history and allows recalling previous operations.",
+            why: "Practice functions, loops, list operations, file I/O, and user input validation.",
+            where: "Useful as a learning tool, embedded systems, or as a foundation for more complex calculators.",
+            how: "Store calculations in a list with timestamps, save to JSON file, load on startup.",
+            libraries: ["json (built-in)", "datetime", "os"],
+            code: `import json
+import datetime
+
+class Calculator:
+    def __init__(self):
+        self.history = []
+        self.load_history()
+    
+    def add_to_history(self, expression, result):
+        entry = {
+            "timestamp": datetime.datetime.now().isoformat(),
+            "expression": expression,
+            "result": result
+        }
+        self.history.append(entry)
+        self.save_history()
+    
+    def calculate(self, expression):
+        try:
+            result = eval(expression)
+            self.add_to_history(expression, result)
+            return result
+        except Exception as e:
+            return f"Error: {e}"
+    
+    def show_history(self):
+        for entry in self.history[-10:]:  # Last 10
+            print(f"{entry['timestamp']}: {entry['expression']} = {entry['result']}")
+    
+    def save_history(self):
+        with open("calc_history.json", "w") as f:
+            json.dump(self.history, f)
+    
+    def load_history(self):
+        try:
+            with open("calc_history.json", "r") as f:
+                self.history = json.load(f)
+        except FileNotFoundError:
+            self.history = []
+
+# CLI Loop
+calc = Calculator()
+while True:
+    cmd = input(">>> Enter calculation (or 'history', 'quit'): ")
+    if cmd == "quit":
+        break
+    elif cmd == "history":
+        calc.show_history()
+    else:
+        print(f"= {calc.calculate(cmd)}")`,
+            demoOutput: ">>> 2 + 2\n= 4\n>>> history\n2026-05-25: 2 + 2 = 4\n>>> 10 * 5\n= 50"
+        },
+        weather: {
+            name: "Weather App (OpenWeatherMap API)",
+            icon: "🌤️",
+            what: "Fetch current weather data for any city using OpenWeatherMap API.",
+            why: "Learn API integration, HTTP requests, JSON parsing, error handling.",
+            where: "Weather dashboards, travel apps, IoT devices, home automation.",
+            how: "Use requests.get() to fetch data, parse JSON response, display temperature, humidity, conditions.",
+            libraries: ["requests", "json (built-in)", "datetime"],
+            code: `import requests
+import json
+
+API_KEY = "your_api_key_here"  # Get from openweathermap.org
+
+def get_weather(city):
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric"
+    try:
+        response = requests.get(url)
+        data = response.json()
+        if response.status_code == 200:
+            temp = data['main']['temp']
+            humidity = data['main']['humidity']
+            description = data['weather'][0]['description']
+            return f"{city}: {temp}°C, {humidity}% humidity, {description}"
+        else:
+            return f"Error: {data.get('message', 'City not found')}"
+    except Exception as e:
+        return f"Connection error: {e}"
+
+# CLI Interface
+while True:
+    city = input("Enter city name (or 'quit'): ")
+    if city.lower() == 'quit':
+        break
+    print(get_weather(city))`,
+            demoOutput: "Enter city name: London\nLondon: 15.3°C, 72% humidity, light rain"
+        },
+        expense: {
+            name: "Personal Expense Tracker (CSV + Charts)",
+            icon: "💰",
+            what: "Track daily expenses, save to CSV, and visualize spending with matplotlib.",
+            why: "Master CSV handling, data persistence, basic data visualization, pandas integration.",
+            where: "Personal finance, budgeting apps, small business expense tracking.",
+            how: "Store expenses in CSV file, calculate totals by category, generate bar chart.",
+            libraries: ["csv (built-in)", "matplotlib", "pandas", "datetime"],
+            code: `import csv
+import matplotlib.pyplot as plt
+from datetime import datetime
+
+expenses = []
+
+def add_expense(category, amount, description):
+    expenses.append({
+        'date': datetime.now().strftime("%Y-%m-%d"),
+        'category': category,
+        'amount': float(amount),
+        'description': description
+    })
+    save_to_csv()
+
+def save_to_csv():
+    with open('expenses.csv', 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=['date', 'category', 'amount', 'description'])
+        writer.writeheader()
+        writer.writerows(expenses)
+
+def load_expenses():
+    try:
+        with open('expenses.csv', 'r') as f:
+            reader = csv.DictReader(f)
+            return list(reader)
+    except FileNotFoundError:
+        return []
+
+def show_summary():
+    categories = {}
+    for exp in expenses:
+        cat = exp['category']
+        categories[cat] = categories.get(cat, 0) + float(exp['amount'])
+    
+    for cat, total in categories.items():
+        print(f"{cat}: ${total:.2f}")
+    
+    # Plot chart
+    plt.bar(categories.keys(), categories.values())
+    plt.title("Expenses by Category")
+    plt.show()
+
+expenses = load_expenses()
+# CLI menu would go here...`,
+            demoOutput: "Category: Food, Amount: 25.50\nCategory: Transport, Amount: 15.00\n[Bar chart displays spending by category]"
+        },
+        scraper: {
+            name: "Web Scraper (Job/News Headlines)",
+            icon: "🕸️",
+            what: "Extract job listings or news headlines from websites using BeautifulSoup.",
+            why: "Learn HTML parsing, data extraction, ethical scraping practices.",
+            where: "Job boards, price monitoring, research, content aggregation.",
+            how: "Send HTTP request, parse HTML with BeautifulSoup, extract data, save to CSV.",
+            libraries: ["requests", "beautifulsoup4", "csv"],
+            code: `import requests
+from bs4 import BeautifulSoup
+import csv
+
+def scrape_news(url):
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    headlines = []
+    for item in soup.find_all('h2')[:10]:  # First 10 headlines
+        headlines.append(item.get_text(strip=True))
+    
+    with open('headlines.csv', 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Headline'])
+        for h in headlines:
+            writer.writerow([h])
+    
+    return headlines
+
+# Example (simulated - would use real URL)
+print("Scraping simulation complete")
+print("Sample headlines: ['Python 3.11 Released', 'Data Science Trends', 'AI Advances']")`,
+            demoOutput: "Scraped 10 headlines saved to headlines.csv\nSample: 'Python 3.11 Released', 'Data Science Trends'"
+        },
+        todo: {
+            name: "To-Do CLI with SQLite",
+            icon: "✅",
+            what: "Command-line task manager with persistent SQLite database (CRUD operations).",
+            why: "Master SQL, database design, CRUD operations, data persistence.",
+            where: "Productivity apps, project management tools, learning SQL.",
+            how: "Use sqlite3 module, create tasks table, implement add/list/complete/delete functions.",
+            libraries: ["sqlite3 (built-in)", "datetime"],
+            code: `import sqlite3
+from datetime import datetime
+
+conn = sqlite3.connect('todos.db')
+c = conn.cursor()
+c.execute('''CREATE TABLE IF NOT EXISTS tasks
+             (id INTEGER PRIMARY KEY, title TEXT, completed INTEGER, created_at TEXT)''')
+
+def add_task(title):
+    c.execute("INSERT INTO tasks (title, completed, created_at) VALUES (?, ?, ?)",
+              (title, 0, datetime.now().isoformat()))
+    conn.commit()
+    print(f"Task added: {title}")
+
+def list_tasks():
+    c.execute("SELECT id, title, completed FROM tasks")
+    tasks = c.fetchall()
+    for task in tasks:
+        status = "✓" if task[2] else "○"
+        print(f"{status} [{task[0]}] {task[1]}")
+
+def complete_task(task_id):
+    c.execute("UPDATE tasks SET completed = 1 WHERE id = ?", (task_id,))
+    conn.commit()
+    print(f"Task {task_id} completed!")
+
+def delete_task(task_id):
+    c.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
+    conn.commit()
+    print(f"Task {task_id} deleted")
+
+# CLI Menu
+while True:
+    cmd = input(">>> (add/list/complete/delete/quit): ")
+    if cmd == "quit":
+        break
+    elif cmd == "add":
+        title = input("Task title: ")
+        add_task(title)
+    elif cmd == "list":
+        list_tasks()`,
+            demoOutput: ">>> add Buy groceries\nTask added: Buy groceries\n>>> list\n○ [1] Buy groceries"
+        }
+    };
+
+    // Track selected project
+    let selectedProject = null;
+
+    // Function to render detailed view
+    function renderProjectDetail(projectId) {
+        const project = projectDetails[projectId];
+        if (!project) return;
+
+        const detailHtml = `
+            <h2 style="margin-bottom: 0.5rem;">${project.icon} ${project.name}</h2>
+            
+            <div class="what-why-where">
+                <strong>📌 WHAT</strong><br>${project.what}
+            </div>
+            <div class="what-why-where">
+                <strong>💡 WHY</strong><br>${project.why}
+            </div>
+            <div class="what-why-where">
+                <strong>📍 WHERE</strong><br>${project.where}
+            </div>
+            <div class="what-why-where">
+                <strong>⚙️ HOW</strong><br>${project.how}
+            </div>
+            
+            <div style="margin: 1rem 0;">
+                <strong>📦 Required Libraries:</strong><br>
+                ${project.libraries.map(lib => `<span class="tech-badge">${lib}</span>`).join('')}
+            </div>
+            
+            <div style="margin-top: 1.5rem;">
+                <strong>💻 Complete Code Example:</strong>
+                <pre><code>${escapeHtml(project.code)}</code></pre>
+            </div>
+            
+            <div class="demo-output">
+                <strong>✨ Expected Output / Demo:</strong><br>
+                ${escapeHtml(project.demoOutput)}
+            </div>
+            
+            <button id="simulateProjectBtn" class="btn-run" style="margin-top: 1rem;">▶ Run Simulation Demo</button>
+            <div id="simulationOutput" class="demo-output" style="margin-top: 1rem; background: #eef3fc; color: #1a2c3e;">
+                💡 Click the button above to see an interactive simulation of this project
+            </div>
+            
+            <div style="margin-top: 1.5rem; padding: 1rem; background: #eef3fc; border-radius: 1rem;">
+                <strong>🎯 Next Steps:</strong><br>
+                1. Set up your development environment<br>
+                2. Install required libraries: <code>pip install ${project.libraries.filter(l => !l.includes('built-in')).join(' ')}</code><br>
+                3. Create a new Python file and implement the code<br>
+                4. Test and add your own features<br>
+                5. Add to your GitHub portfolio!
+            </div>
+        `;
+
+        document.getElementById("detailArea").innerHTML = detailHtml;
+
+        // Add simulation button event
+        const simulateBtn = document.getElementById("simulateProjectBtn");
+        if (simulateBtn) {
+            simulateBtn.addEventListener("click", () => {
+                simulateProject(projectId);
+            });
+        }
+    }
+
+    // Simulation functions for each project
+    function simulateProject(projectId) {
+        const outputDiv = document.getElementById("simulationOutput");
+        
+        switch(projectId) {
+            case "calculator":
+                outputDiv.innerHTML = `<strong>🧮 CLI Calculator Simulation:</strong><br><br>
+                ➤ 25 + 17 = 42<br>
+                ➤ 100 / 4 = 25.0<br>
+                ➤ 2 ** 10 = 1024<br>
+                ➤ History saved to calc_history.json<br><br>
+                ✅ The calculator supports: +, -, *, /, **, %, and parentheses.<br>
+                💾 All calculations are saved with timestamps.`;
+                break;
+            case "weather":
+                outputDiv.innerHTML = `<strong>🌤️ Weather App Simulation:</strong><br><br>
+                📍 City: New York<br>
+                🌡️ Temperature: 18.5°C<br>
+                💧 Humidity: 65%<br>
+                🌬️ Conditions: Clear sky<br>
+                🌍 City: Tokyo<br>
+                🌡️ Temperature: 22.3°C<br>
+                💧 Humidity: 70%<br><br>
+                ✅ API integration working! Get your free API key from OpenWeatherMap.`;
+                break;
+            case "expense":
+                outputDiv.innerHTML = `<strong>💰 Expense Tracker Simulation:</strong><br><br>
+                📅 Expenses saved to expenses.csv<br><br>
+                Categories:<br>
+                • Food: $245.50<br>
+                • Transport: $89.00<br>
+                • Entertainment: $120.00<br>
+                • Utilities: $150.00<br><br>
+                📊 Total spent: $604.50<br>
+                🎯 Bar chart would display spending by category.<br>
+                ✅ CSV file created with all entries.`;
+                break;
+            case "scraper":
+                outputDiv.innerHTML = `<strong>🕸️ Web Scraper Simulation:</strong><br><br>
+                📰 Extracted Headlines (from simulation):<br>
+                1. "Python 3.12 Released with New Features"<br>
+                2. "Data Science Jobs Demand Up 40%"<br>
+                3. "Machine Learning Breakthrough Announced"<br>
+                4. "Web Scraping Best Practices 2026"<br>
+                5. "BeautifulSoup 4.12 Released"<br><br>
+                💾 Saved to headlines.csv<br>
+                ⚠️ Always respect robots.txt and website terms of service.`;
+                break;
+            case "todo":
+                outputDiv.innerHTML = `<strong>✅ To-Do CLI with SQLite Simulation:</strong><br><br>
+                📋 Current Tasks:<br>
+                ○ [1] Complete Python course<br>
+                ○ [2] Build final project<br>
+                ○ [3] Update portfolio<br><br>
+                ➤ Task 1 completed!<br>
+                ✓ [1] Complete Python course<br>
+                ○ [2] Build final project<br>
+                ○ [3] Update portfolio<br><br>
+                ✅ Database: todos.db created with SQLite.<br>
+                💾 All tasks persist between sessions.`;
+                break;
+            default:
+                outputDiv.innerHTML = `Simulation demo for this project. Click "Select This Project" to see full details.`;
+        }
+    }
+
+    // Add click handlers to project cards and select buttons
+    function initializeProjectSelection() {
+        const cards = document.querySelectorAll('.project-card');
+        const selectBtns = document.querySelectorAll('.btn-select');
+
+        function selectProject(projectId) {
+            selectedProject = projectId;
+            // Update visual selection
+            cards.forEach(card => {
+                const cardProject = card.getAttribute('data-project');
+                if (cardProject === projectId) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+            // Update button text
+            selectBtns.forEach(btn => {
+                const btnProject = btn.getAttribute('data-project');
+                if (btnProject === projectId) {
+                    btn.textContent = "✓ Selected";
+                    btn.classList.add('btn-selected');
+                } else {
+                    btn.textContent = "📐 Select This Project";
+                    btn.classList.remove('btn-selected');
+                }
+            });
+            // Render details
+            renderProjectDetail(projectId);
+        }
+
+        // Card click
+        cards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (e.target.classList.contains('btn-select')) return;
+                const projectId = card.getAttribute('data-project');
+                selectProject(projectId);
+            });
+        });
+
+        // Button click
+        selectBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const projectId = btn.getAttribute('data-project');
+                selectProject(projectId);
+            });
+        });
+    }
+
+    // Initialize and select first project by default
+    initializeProjectSelection();
+    setTimeout(() => {
+        const firstCard = document.querySelector('.project-card');
+        if (firstCard) {
+            const firstProject = firstCard.getAttribute('data-project');
+            document.querySelector(`.btn-select[data-project="${firstProject}"]`).click();
+        }
+    }, 100);
+</script>
+</body>
+</html>
