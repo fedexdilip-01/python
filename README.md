@@ -50,7 +50,7 @@ Pandas Series & DataFrame, reading CSV
 
 Exercise: Analyze a small dataset (e.g., student grades)
 
-# Day 11: List & Dictionary Comprehensions, Lambda, Map/Filter/Reduce
+# Day 11: List & Dictionary Comprehensions, Lambda, Map/Filter/Reduce-- https://fedexdilip-01.github.io/python/pday3.html
 Lambda functions
 
 map(), filter(), reduce()
