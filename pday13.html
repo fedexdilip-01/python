@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Python Complete Course: Days 1-13 | Back/Next Navigation | Full Learning Path</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f4fa 0%, #e8edf3 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: #1a2c3e;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header with Navigation */
+        .hero {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #1f5e7e, #0e4b63);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: #2c5368;
+            background: rgba(255, 255, 250, 0.85);
+            backdrop-filter: blur(2px);
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        /* Navigation Bar */
+        .nav-bar {
+            background: white;
+            border-radius: 60px;
+            padding: 0.8rem 1.5rem;
+            margin: 1.5rem auto 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            border: 1px solid rgba(31, 59, 76, 0.15);
+            max-width: 800px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, #1f5e7e, #134b66);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #2c7da0, #1a5a78);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .day-indicator {
+            background: #eef3fa;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 700;
+            color: #1f3b4c;
+            font-size: 0.9rem;
+        }
+
+        .day-badge {
+            background: #2c7da0;
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 1.8rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 1.8rem;
+            box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 22px 35px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: #1f3b4c;
+            color: white;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-header span {
+            font-size: 1.5rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .what-why-where {
+            background: #eef3fa;
+            border-radius: 1.2rem;
+            padding: 0.9rem 1.2rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            border-left: 4px solid #2c7da0;
+        }
+
+        .what-why-where strong {
+            color: #1f5e7e;
+        }
+
+        pre {
+            background: #0e1e2a;
+            color: #e2f0fa;
+            padding: 1rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: #eef2f5;
+            padding: 0.2rem 0.45rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #c7254e;
+        }
+
+        .example-title {
+            font-weight: 700;
+            margin: 1rem 0 0.3rem 0;
+            color: #0f3b4c;
+            border-left: 3px solid #2c7da0;
+            padding-left: 0.7rem;
+        }
+
+        .output-demo {
+            background: #f0f4f9;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-top: 0.8rem;
+            font-family: monospace;
+            border: 1px dashed #bdd4e7;
+            color: #1f4e6e;
+            font-size: 0.85rem;
+        }
+
+        .btn-run {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-run:hover {
+            background: #1f5e7e;
+            transform: scale(0.97);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #3d6b8c;
+            font-size: 0.85rem;
+            border-top: 1px solid #cbdde9;
+            padding-top: 2rem;
+        }
+
+        .inline-code {
+            background: #eef2f5;
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+
+        @media (max-width: 640px) {
+            .nav-bar {
+                flex-direction: column;
+            }
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🐍 Python Complete Learning Path</h1>
+        <p>Days 1–13: From Basics to APIs & Web Scraping</p>
+    </div>
+
+    <!-- Navigation Bar with Back/Next -->
+    <div class="nav-bar">
+        <button id="backBtn" class="nav-btn">◀ Back</button>
+        <div class="day-indicator">
+            📅 <span id="currentDayLabel">Day 1</span> <span id="dayTitleLabel" class="day-badge" style="margin-left: 8px;">Basics</span>
+        </div>
+        <button id="nextBtn" class="nav-btn">Next ▶</button>
+    </div>
+
+    <!-- Dynamic Content Area - All 13 Days Content -->
+    <div id="contentArea">
+        <!-- Content will be injected dynamically by JavaScript -->
+        <div style="text-align: center; padding: 3rem;">Loading content...</div>
+    </div>
+
+    <footer>
+        📌 Complete Python Course: Days 1–13 | Use ◀ Back / Next ▶ to navigate through all topics | Each day includes WHAT · WHY · HOW · WHERE + Examples
+    </footer>
+</div>
+
+<script>
+    // ============================================
+    // COMPLETE DATA FOR ALL 13 DAYS
+    // Each day includes: title, description, concepts, examples, code
+    // ============================================
+    
+    const daysData = {
+        1: {
+            title: "Day 1–2: Python Basics",
+            badge: "Basics",
+            description: "Python installation, IDE (VS Code, PyCharm, Jupyter), Variables, Data Types, Basic I/O",
+            concepts: [
+                { name: "Variables & Data Types", desc: "int, float, str, bool — store different kinds of data." },
+                { name: "Input/Output", desc: "print() displays output, input() reads user input." }
+            ],
+            codeExample: `# Hello, World! + User Greeting
+name = input("What's your name? ")
+print("Hello, World!")
+print(f"Hello, {name}! Welcome to Python.")`,
+            exampleOutput: "What's your name? Alex\\nHello, World!\\nHello, Alex! Welcome to Python."
+        },
+        2: {
+            title: "Day 3–4: Control Flow",
+            badge: "Control Flow",
+            description: "Conditional statements (if/elif/else), Loops (for/while), break, continue, pass",
+            concepts: [
+                { name: "Conditionals", desc: "Decision making with if, elif, else." },
+                { name: "Loops", desc: "for and while loops for iteration." }
+            ],
+            codeExample: `# Number Guessing Game
+secret = 42
+while True:
+    guess = int(input("Guess a number: "))
+    if guess == secret:
+        print("Correct!")
+        break
+    elif guess < secret:
+        print("Too low")
+    else:
+        print("Too high")`,
+            exampleOutput: "Interactive guessing game with while loop and conditionals."
+        },
+        3: {
+            title: "Day 5–6: Data Structures",
+            badge: "Data Structures",
+            description: "Lists, tuples, dictionaries, sets, indexing, slicing, list comprehensions",
+            concepts: [
+                { name: "Lists & Tuples", desc: "Ordered collections, mutable vs immutable." },
+                { name: "Dictionaries & Sets", desc: "Key-value pairs, unique elements." }
+            ],
+            codeExample: `# To-Do List Manager
+todos = []
+def add_task(task):
+    todos.append({"task": task, "done": False})
+add_task("Learn Python")
+add_task("Build project")
+print([t["task"] for t in todos if not t["done"]])`,
+            exampleOutput: "['Learn Python', 'Build project']"
+        },
+        4: {
+            title: "Day 7: String Manipulation & Functions",
+            badge: "Strings & Functions",
+            description: "String methods, f-strings, .format(), defining functions, return, default arguments",
+            concepts: [
+                { name: "String Methods", desc: ".upper(), .strip(), .split(), .join()" },
+                { name: "Functions", desc: "def, return, default parameters" }
+            ],
+            codeExample: `def greet(name, greeting="Hello"):
+    return f"{greeting}, {name.upper()}!"
+print(greet("Alice"))
+print(greet("Bob", "Hi"))`,
+            exampleOutput: "Hello, ALICE!\\nHi, BOB!"
+        },
+        5: {
+            title: "Day 8: File Handling & Exceptions",
+            badge: "File I/O & Errors",
+            description: "Read/write files (.txt, .csv), try/except/finally, custom exceptions",
+            concepts: [
+                { name: "File Operations", desc: "open(), read(), write(), with statement" },
+                { name: "Exception Handling", desc: "try, except, finally, raise" }
+            ],
+            codeExample: `try:
+    with open('data.txt', 'r') as f:
+        content = f.read()
+        print(f"File has {len(content)} chars")
+except FileNotFoundError:
+    print("File not found!")`,
+            exampleOutput: "File not found! (or file content length)"
+        },
+        6: {
+            title: "Day 9: Modules & Packages",
+            badge: "Modules",
+            description: "import, from...import, os, sys, random, datetime, math, create your own module",
+            concepts: [
+                { name: "Built-in Modules", desc: "os, sys, random, datetime, math" },
+                { name: "Custom Modules", desc: "Create .py files and import them" }
+            ],
+            codeExample: `import random, datetime
+import math
+print(f"Random: {random.randint(1,100)}")
+print(f"Today: {datetime.date.today()}")
+print(f"Pi: {math.pi:.2f}")`,
+            exampleOutput: "Random: 42\\nToday: 2026-05-25\\nPi: 3.14"
+        },
+        7: {
+            title: "Day 10: NumPy & Pandas Intro",
+            badge: "Data Science",
+            description: "pip install, NumPy arrays, Pandas Series & DataFrame, reading CSV",
+            concepts: [
+                { name: "NumPy", desc: "N-dimensional arrays, vectorized operations" },
+                { name: "Pandas", desc: "DataFrame for tabular data analysis" }
+            ],
+            codeExample: `import numpy as np
+import pandas as pd
+arr = np.array([1,2,3,4,5])
+df = pd.DataFrame({'A': [1,2,3], 'B': [4,5,6]})
+print(f"Mean: {arr.mean()}")
+print(df.head())`,
+            exampleOutput: "Mean: 3.0\\n   A  B\\n0  1  4\\n1  2  5\\n2  3  6"
+        },
+        8: {
+            title: "Day 11: Lambda, Map, Filter, Reduce",
+            badge: "Functional",
+            description: "Lambda functions, map(), filter(), reduce(), list/dict comprehensions",
+            concepts: [
+                { name: "Lambda", desc: "Anonymous one-line functions" },
+                { name: "Map/Filter/Reduce", desc: "Functional data transformations" }
+            ],
+            codeExample: `nums = [1,2,3,4,5,6,7,8,9,10]
+evens_squared = list(map(lambda x: x**2, filter(lambda x: x%2==0, nums)))
+print(evens_squared)`,
+            exampleOutput: "[4, 16, 36, 64, 100]"
+        },
+        9: {
+            title: "Day 12: Object-Oriented Programming",
+            badge: "OOP",
+            description: "Classes, objects, __init__, self, inheritance, polymorphism, encapsulation, magic methods",
+            concepts: [
+                { name: "Classes & Objects", desc: "Blueprints and instances" },
+                { name: "Inheritance", desc: "Child classes inherit from parents" }
+            ],
+            codeExample: `class BankAccount:
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self._balance = balance
+    def deposit(self, amount):
+        self._balance += amount
+        return self._balance
+    def __str__(self):
+        return f"{self.owner}: ${self._balance}"
+acc = BankAccount("Alice", 100)
+acc.deposit(50)
+print(acc)`,
+            exampleOutput: "Alice: $150"
+        },
+        10: {
+            title: "Day 13: API & Web Scraping",
+            badge: "APIs & Scraping",
+            description: "requests.get(), JSON parsing, BeautifulSoup, extract data from HTML",
+            concepts: [
+                { name: "Requests", desc: "HTTP requests to APIs" },
+                { name: "BeautifulSoup", desc: "Parse HTML and extract data" }
+            ],
+            codeExample: `import requests
+from bs4 import BeautifulSoup
+response = requests.get('https://api.github.com')
+data = response.json()
+print(f"GitHub API Status: {data.get('status', 'OK')}")`,
+            exampleOutput: "GitHub API Status: OK"
+        }
+    };
+
+    // Additional day aliases (mapping for navigation)
+    const totalDays = 10; // Days 1-10 (1 to 10)
+    let currentDay = 1;
+
+    // Helper: escape HTML
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Render content for current day
+    function renderDay(dayNum) {
+        const day = daysData[dayNum];
+        if (!day) return;
+        
+        // Update header indicators
+        document.getElementById("currentDayLabel").innerText = `Day ${dayNum}`;
+        document.getElementById("dayTitleLabel").innerText = day.badge;
+        
+        // Update Back/Next button states
+        document.getElementById("backBtn").disabled = (dayNum === 1);
+        document.getElementById("nextBtn").disabled = (dayNum === totalDays);
+        
+        // Build HTML content
+        let conceptsHtml = '';
+        day.concepts.forEach(concept => {
+            conceptsHtml += `
+                <div class="what-why-where">
+                    <strong>📌 ${concept.name}</strong><br>
+                    ${concept.desc}
+                </div>
+            `;
+        });
+        
+        const html = `
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header"><span>📖</span> ${day.title}</div>
+                    <div class="card-body">
+                        <div class="what-why-where">
+                            <strong>🎯 Overview</strong><br>
+                            ${day.description}
+                        </div>
+                        ${conceptsHtml}
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header"><span>💻</span> Code Example</div>
+                    <div class="card-body">
+                        <div class="example-title">🐍 Python Implementation</div>
+                        <pre><code>${escapeHtml(day.codeExample)}</code></pre>
+                        <div class="output-demo">
+                            <strong>✨ Expected Output:</strong><br>
+                            ${escapeHtml(day.exampleOutput)}
+                        </div>
+                        <button class="btn-run" id="runDayDemoBtn">▶ Run This Example (Simulated)</button>
+                        <div id="liveDemoOutput" class="output-demo" style="margin-top: 12px; background: #eef3fc;">
+                            💡 Click to see explanation of what this code does
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header"><span>🧠</span> Key Takeaways</div>
+                    <div class="card-body">
+                        <div class="what-why-where">
+                            <strong>💡 WHAT</strong> — Core concepts covered in Day ${dayNum}.<br>
+                            <strong>🎯 WHY</strong> — Essential for real-world Python development.<br>
+                            <strong>📍 WHERE</strong> — Applied in data science, web dev, automation, and more.<br>
+                            <strong>⚙️ HOW</strong> — Practice with the code examples and exercises.
+                        </div>
+                        <div class="example-title">📚 Practice Exercise</div>
+                        <pre><code># Try to modify the example above
+# Add your own functionality
+# Experiment with different inputs</code></pre>
+                        <div class="output-demo">
+                            ✅ <strong>Next Step:</strong> Use ◀ Back / Next ▶ to explore all 10 days of learning!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById("contentArea").innerHTML = html;
+        
+        // Attach event listener for the demo button after rendering
+        const demoBtn = document.getElementById("runDayDemoBtn");
+        if (demoBtn) {
+            demoBtn.addEventListener("click", () => {
+                const outputDiv = document.getElementById("liveDemoOutput");
+                outputDiv.innerHTML = `<strong>▶ ${day.title} - Code Explanation:</strong><br><br>
+                📝 <strong>What this code does:</strong><br>
+                ${day.description}<br><br>
+                🔍 <strong>Key syntax used:</strong><br>
+                <code>${escapeHtml(day.codeExample.split('\\n')[0])}</code> ...<br><br>
+                💡 <strong>Try it yourself:</strong> Modify the values and observe changes. This demonstrates ${day.badge} concepts in action.`;
+                outputDiv.style.background = "#e2f0f5";
+            });
+        }
+    }
+    
+    // Navigation functions
+    function goBack() {
+        if (currentDay > 1) {
+            currentDay--;
+            renderDay(currentDay);
+        }
+    }
+    
+    function goNext() {
+        if (currentDay < totalDays) {
+            currentDay++;
+            renderDay(currentDay);
+        }
+    }
+    
+    // Attach event listeners
+    document.getElementById("backBtn").addEventListener("click", goBack);
+    document.getElementById("nextBtn").addEventListener("click", goNext);
+    
+    // Keyboard navigation (left/right arrows)
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") {
+            goBack();
+            e.preventDefault();
+        } else if (e.key === "ArrowRight") {
+            goNext();
+            e.preventDefault();
+        }
+    });
+    
+    // Initialize with Day 1
+    renderDay(1);
+    
+    // Add a small tooltip style
+    const style = document.createElement('style');
+    style.textContent = `
+        .nav-btn:active:not(:disabled) {
+            transform: scale(0.96);
+        }
+    `;
+    document.head.appendChild(style);
+</script>
+</body>
+</html>
