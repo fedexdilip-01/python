@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Python Basics: Day 1–2 | Variables, I/O & IDE Setup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f5f7fc 0%, #eef2f8 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            line-height: 1.5;
+            color: #1a2c3e;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* header */
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 2.7rem;
+            background: linear-gradient(135deg, #1e3c72, #2b3b4e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #2c5368;
+            max-width: 700px;
+            margin: 0 auto;
+            background: #ffffffcc;
+            backdrop-filter: blur(2px);
+            padding: 0.5rem 1rem;
+            border-radius: 60px;
+            display: inline-block;
+        }
+
+        /* grid layout */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        /* cards */
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            overflow: hidden;
+            backdrop-filter: blur(0px);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 24px 40px -16px rgba(0, 0, 0, 0.18);
+        }
+
+        .card-header {
+            background: #1f3b4c;
+            color: white;
+            padding: 1.2rem 1.5rem;
+            font-weight: 600;
+            font-size: 1.3rem;
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-header span {
+            font-size: 1.6rem;
+        }
+
+        .card-body {
+            padding: 1.6rem;
+        }
+
+        .what-why-where {
+            background: #eef3fa;
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.4rem;
+            font-size: 0.9rem;
+            border-left: 4px solid #2c7da0;
+        }
+
+        .what-why-where strong {
+            color: #1f5e7e;
+        }
+
+        pre {
+            background: #0e1e2a;
+            color: #e2f0fa;
+            padding: 1rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+            tab-size: 4;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: #eef2f5;
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #c7254e;
+        }
+
+        .example-title {
+            font-weight: 700;
+            margin: 1rem 0 0.3rem 0;
+            color: #0f3b4c;
+            border-left: 3px solid #2c7da0;
+            padding-left: 0.7rem;
+        }
+
+        .output-demo {
+            background: #f0f4f9;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-top: 0.8rem;
+            font-family: monospace;
+            border: 1px dashed #bdd4e7;
+            color: #1f4e6e;
+        }
+
+        .btn-run {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 0.9rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-left: 0.5rem;
+        }
+
+        .btn-run:hover {
+            background: #1f5e7e;
+            transform: scale(0.97);
+        }
+
+        .interactive-area {
+            background: #ffffffdd;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-top: 1.8rem;
+            box-shadow: 0 12px 25px -10px rgba(0,0,0,0.05);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #3d6b8c;
+            font-size: 0.85rem;
+            border-top: 1px solid #cbdde9;
+            padding-top: 2rem;
+        }
+
+        @media (max-width: 700px) {
+            .hero h1 { font-size: 2rem; }
+            .card-body { padding: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🐍 Python Basics · Day 1–2</h1>
+        <p>📦 Installation · IDE · Variables · I/O · "Hello, World!" greeting</p>
+    </div>
+
+    <div class="grid">
+        <!-- CARD 1: Setup + IDE -->
+        <div class="card">
+            <div class="card-header">
+                <span>🛠️</span> Setup & Environment
+            </div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Install Python (python.org), choose VS Code / PyCharm / Jupyter.<br>
+                    <strong>💡 WHY</strong> — Write & run Python code efficiently with debugging, syntax highlight.<br>
+                    <strong>📍 WHERE</strong> — Local machine, interactive notebooks, or cloud IDEs.
+                </div>
+                <div class="example-title">✨ Popular IDEs</div>
+                <ul style="margin-left: 1.2rem; margin-bottom: 1rem;">
+                    <li><strong>VS Code</strong> — lightweight, extensions (Python, Pylance)</li>
+                    <li><strong>PyCharm</strong> — full-featured, great for projects</li>
+                    <li><strong>Jupyter Notebook</strong> — educational, step-by-step cells</li>
+                </ul>
+                <div class="example-title">🔍 Check Python version (terminal)</div>
+                <pre><code>python --version   # or python3 --version</code></pre>
+                <div class="output-demo">
+                    ✅ Expected: Python 3.10+  (If not installed: python.org)
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 2: Variables & Data Types (int, float, str, bool) -->
+        <div class="card">
+            <div class="card-header">
+                <span>📊</span> Variables & Data Types
+            </div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Variables store values. Types: <code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>.<br>
+                    <strong>💡 WHY</strong> — Manage data, calculations, and logic.<br>
+                    <strong>📍 WHERE</strong> — Every Python script, from math to AI.
+                </div>
+                <div class="example-title">📘 Type examples</div>
+                <pre><code>age = 25              # int
+price = 19.99         # float
+name = "Alice"        # str
+is_student = True     # bool
+
+print(type(age))      # &lt;class 'int'></code></pre>
+                <div class="example-title">🧠 Dynamic typing in action</div>
+                <pre><code>x = 10       # int
+x = "hello"  # now str → allowed</code></pre>
+                <div class="output-demo">
+                    🔍 <strong>Type conversion:</strong> <code>int("42")</code> → 42, <code>str(3.14)</code> → "3.14"
+                </div>
+            </div>
+        </div>
+
+        <!-- CARD 3: Input / Output (print, input) + Greeting exercise -->
+        <div class="card">
+            <div class="card-header">
+                <span>📢</span> I/O & Greeting Program
+            </div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — <code>print()</code> displays output. <code>input()</code> reads user text.<br>
+                    <strong>💡 WHY</strong> — Create interactive programs & communicate.<br>
+                    <strong>📍 WHERE</strong> — CLI tools, chatbots, data collection.
+                </div>
+                <div class="example-title">💬 Basic Hello, World!</div>
+                <pre><code>print("Hello, World!")</code></pre>
+                <div class="example-title">👤 User Greeting (Exercise ready)</div>
+                <pre><code>name = input("What's your name? ")
+print("Hello,", name, "! Welcome to Python.")</code></pre>
+                <div class="output-demo">
+                    🧪 <strong>Demo run:</strong><br>
+                    What's your name? <span style="background:#e2e8f0;">Alex</span><br>
+                    Hello, Alex ! Welcome to Python.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2 Complete Examples: What, Why, How, Where + Full programs -->
+    <div style="margin-bottom: 2rem;">
+        <div class="card" style="margin-bottom: 1.8rem;">
+            <div class="card-header">
+                <span>📘 EXAMPLE 1</span> — Greeting + Age with type conversion
+            </div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Personalized welcome + year-of-birth calculation.<br>
+                    <strong>💡 WHY</strong> — Demonstrates <code>input()</code>, <code>int()</code> conversion, f-string formatting.<br>
+                    <strong>📍 WHERE</strong> — User profiles, simple registration forms.<br>
+                    <strong>⚙️ HOW</strong> — Ask name & age, compute birth year approximation.
+                </div>
+                <pre><code># Example 1: Interactive user bio
+name = input("Enter your name: ")
+age = int(input("Enter your age: "))
+current_year = 2026
+birth_year = current_year - age
+
+print(f"\n✨ Hello, {name}!")
+print(f"You are {age} years old, so you were probably born around {birth_year}.")
+print(f"Welcome to the Python journey 🚀")</code></pre>
+                <button class="btn-run" id="runExample1">▶ Run Example 1 (simulated)</button>
+                <div id="example1Output" class="output-demo" style="margin-top: 12px; background:#e9f0f5;">
+                    💡 Click run → interactive prompt appears.
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span>📘 EXAMPLE 2</span> — Data types showcase + boolean logic
+            </div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Declare all 4 basic types, perform arithmetic & condition.<br>
+                    <strong>💡 WHY</strong> — Understand type interactions, f-strings, and dynamic behavior.<br>
+                    <strong>📍 WHERE</strong> — Data processing, input validation, games.<br>
+                    <strong>⚙️ HOW</strong> — Uses int, float, str, bool with a real mini-quiz.
+                </div>
+                <pre><code># Example 2: Variables & types in action
+product = "Laptop"        # str
+price = 999.99            # float
+stock = 45                # int
+in_stock = stock > 0      # bool
+
+print(f"📦 Product: {product}")
+print(f"💰 Price: ${price}")
+print(f"📊 Units left: {stock}")
+print(f"✅ Available: {in_stock}")
+
+# Simple discount logic
+if in_stock:
+    discount = 0.15
+    final_price = price * (1 - discount)
+    print(f"🎉 15% OFF → Final price: ${final_price:.2f}")</code></pre>
+                <button class="btn-run" id="runExample2">▶ Run Example 2 (simulated)</button>
+                <div id="example2Output" class="output-demo" style="margin-top: 12px; background:#e9f0f5;">
+                    💡 Click run to see output in console simulation.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive Mini Playground: "Hello World + Custom Greeting" From Exercise -->
+    <div class="interactive-area">
+        <h3 style="display: flex; align-items: center; gap: 0.5rem;">🌟 Live Exercise: "Hello, World!" + User Greeting</h3>
+        <p style="margin-bottom: 1rem;">Type your name below — this runs the exact task from Day 1–2: prints classic greeting + personalized welcome.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end;">
+            <div style="flex: 2; min-width: 180px;">
+                <label style="font-weight: 500;">Your name:</label>
+                <input type="text" id="userNameInput" placeholder="e.g., Maria" style="width: 100%; padding: 10px; border-radius: 60px; border: 1px solid #cbdde9; margin-top: 5px;">
+            </div>
+            <button id="greetBtn" style="background: #1f6e8c; border: none; color: white; padding: 8px 24px; border-radius: 40px; font-weight: bold; cursor: pointer;">✨ Say Hello</button>
+        </div>
+        <div id="greetingResult" class="output-demo" style="margin-top: 1.2rem; font-family: monospace; background: #1f2f38; color: #d9f0f7;">
+            👋 Output will appear here...
+        </div>
+        <div style="margin-top: 1rem; font-size: 0.85rem; background: #eef3fc; border-radius: 1rem; padding: 0.8rem;">
+            <strong>📌 Code behind:</strong> <code>print("Hello, World!")</code> + <code>name = input("...")</code> + <code>print(f"Hello {name}!")</code> — fully interactive.
+        </div>
+    </div>
+
+    <footer>
+        🐍 Day 1–2 Mastery: Python installation, VS Code/PyCharm/Jupyter, variables (int/float/str/bool), print/input.<br>
+        ✨ Each concept includes WHAT · WHY · HOW · WHERE + two complete runnable examples.
+    </footer>
+</div>
+
+<script>
+    // Helper: simulate prompt() but with custom console-like style and fallback for demos
+    function simulatePrompt(question, defaultVal = "") {
+        let answer = prompt(question, defaultVal);
+        if (answer === null) return "";
+        return answer;
+    }
+
+    // Example 1 Runner (Interactive prompt simulation)
+    document.getElementById("runExample1").addEventListener("click", () => {
+        let userName = simulatePrompt("Enter your name:", "Pythonista");
+        if (userName === null) userName = "";
+        let ageInput = simulatePrompt("Enter your age:", "20");
+        if (ageInput === null) ageInput = "20";
+        let ageNum = parseInt(ageInput, 10);
+        if (isNaN(ageNum)) ageNum = 20;
+        const currentYear = 2026;
+        let birthYear = currentYear - ageNum;
+
+        let outputDiv = document.getElementById("example1Output");
+        outputDiv.innerHTML = `<strong>▶ Output:</strong><br>
+✨ Hello, ${escapeHtml(userName) || "Guest"}!<br>
+You are ${ageNum} years old, so you were probably born around ${birthYear}.<br>
+Welcome to the Python journey 🚀`;
+        outputDiv.style.background = "#e2f0f5";
+    });
+
+    // Example 2 Runner (simulate console output)
+    document.getElementById("runExample2").addEventListener("click", () => {
+        const product = "Laptop";
+        const price = 999.99;
+        const stock = 45;
+        const in_stock = stock > 0;
+        const discount = 0.15;
+        const final_price = price * (1 - discount);
+        
+        let outputText = `📦 Product: ${product}\n💰 Price: $${price}\n📊 Units left: ${stock}\n✅ Available: ${in_stock}\n🎉 15% OFF → Final price: $${final_price.toFixed(2)}`;
+        
+        document.getElementById("example2Output").innerHTML = `<strong>▶ Output (Example 2):</strong><br><pre style="background:#0e1e2a; color:#e2f0fa; margin:0; font-size:0.8rem;">${escapeHtml(outputText)}</pre>`;
+    });
+
+    // Helper to escape HTML
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    // Greeting Exercise (Hello, World! + personalized)
+    document.getElementById("greetBtn").addEventListener("click", () => {
+        let nameInput = document.getElementById("userNameInput").value.trim();
+        // classic hello world part
+        let classicLine = "Hello, World!";
+        let personalizedMsg = "";
+        if (nameInput === "") {
+            personalizedMsg = "Hello, awesome learner! (please enter a name next time)";
+        } else {
+            personalizedMsg = `Hello, ${escapeHtml(nameInput)}! Welcome to Python programming. 🐍✨`;
+        }
+        // full combined output
+        let finalOutput = `👉 ${classicLine}\n👉 ${personalizedMsg}`;
+        document.getElementById("greetingResult").innerHTML = `<pre style="margin:0; white-space:pre-wrap; font-family:'Fira Code', monospace;">${escapeHtml(finalOutput)}</pre>`;
+        document.getElementById("greetingResult").style.background = "#e9f3f7";
+    });
+
+    // Additional dynamic hover explanation: (subtle)
+    // add some tooltips for better what/why hints in card elements
+    const allWhatWhy = document.querySelectorAll('.what-why-where');
+    allWhatWhy.forEach(el => {
+        el.style.transition = "0.1s";
+    });
+    
+    // Optional: Provide default small demo log for quick understanding
+    console.log("Python Basics interactive page ready — learn variables, I/O, IDE.");
+</script>
+</body>
+</html>
