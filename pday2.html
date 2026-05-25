@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Python Control Flow: Day 3–4 | Conditionals, Loops & Number Guessing Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8f9fc 0%, #eef2f5 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.5;
+            color: #1a2c3e;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2.6rem;
+            background: linear-gradient(135deg, #1e4a6e, #0e2a3b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #2c5368;
+            background: rgba(255,255,240,0.8);
+            backdrop-filter: blur(2px);
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 1.8rem;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 40px -14px rgba(0, 0, 0, 0.18);
+        }
+
+        .card-header {
+            background: #1f3b4c;
+            color: white;
+            padding: 1.2rem 1.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-header span {
+            font-size: 1.6rem;
+        }
+
+        .card-body {
+            padding: 1.6rem;
+        }
+
+        .what-why-where {
+            background: #eef3fa;
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.9rem;
+            border-left: 4px solid #2c7da0;
+        }
+
+        .what-why-where strong {
+            color: #1f5e7e;
+        }
+
+        pre {
+            background: #0e1e2a;
+            color: #e2f0fa;
+            padding: 1rem;
+            border-radius: 1rem;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: #eef2f5;
+            padding: 0.2rem 0.45rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #c7254e;
+        }
+
+        .example-title {
+            font-weight: 700;
+            margin: 1rem 0 0.3rem 0;
+            color: #0f3b4c;
+            border-left: 3px solid #2c7da0;
+            padding-left: 0.7rem;
+        }
+
+        .output-demo {
+            background: #f0f4f9;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-top: 0.8rem;
+            font-family: monospace;
+            border: 1px dashed #bdd4e7;
+            color: #1f4e6e;
+        }
+
+        .btn-run {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-run:hover {
+            background: #1f5e7e;
+            transform: scale(0.97);
+        }
+
+        .game-area {
+            background: linear-gradient(145deg, #ffffff, #f7fafd);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            margin: 2rem 0 1rem;
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #cde3f0;
+        }
+
+        .game-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .guess-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 1rem 0;
+            align-items: center;
+        }
+
+        .guess-input input {
+            flex: 2;
+            min-width: 180px;
+            padding: 12px 16px;
+            border-radius: 60px;
+            border: 1px solid #bdd4e7;
+            font-size: 1rem;
+        }
+
+        .guess-input button {
+            background: #1f6e8c;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 60px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .guess-input button:hover {
+            background: #0e5a74;
+        }
+
+        .game-feedback {
+            background: #0e2a2f;
+            color: #cff4fc;
+            padding: 1rem;
+            border-radius: 1.2rem;
+            font-family: monospace;
+            margin-top: 1rem;
+        }
+
+        .reset-btn {
+            background: #4f6f8f;
+            margin-left: 10px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #3d6b8c;
+            font-size: 0.85rem;
+            border-top: 1px solid #cbdde9;
+            padding-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🎮 Python Control Flow · Day 3–4</h1>
+        <p>if / elif / else · for & while loops · break, continue, pass · 🔢 Number Guessing Game</p>
+    </div>
+
+    <div class="grid">
+        <!-- Conditional statements card -->
+        <div class="card">
+            <div class="card-header"><span>⚖️</span> Conditionals: if, elif, else</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Decision making in code: <code>if condition:</code> , <code>elif</code>, <code>else</code>.<br>
+                    <strong>💡 WHY</strong> — Execute different logic based on user input, data, or state.<br>
+                    <strong>📍 WHERE</strong> — Input validation, menus, games, data filtering.
+                </div>
+                <div class="example-title">🔍 Basic example</div>
+                <pre><code>score = 85
+if score >= 90:
+    grade = "A"
+elif score >= 75:
+    grade = "B"
+else:
+    grade = "C"
+print(f"Grade: {grade}")   # Grade: B</code></pre>
+                <div class="output-demo">✅ Nested conditionals & logical operators (and, or, not) also possible.</div>
+            </div>
+        </div>
+
+        <!-- Loops (for, while) -->
+        <div class="card">
+            <div class="card-header"><span>🔄</span> Loops: for & while</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — <code>for</code> iterates over sequences, <code>while</code> repeats while True.<br>
+                    <strong>💡 WHY</strong> — Automate repetitive tasks, process lists, handle user retries.<br>
+                    <strong>📍 WHERE</strong> — Data processing, simulations, game loops.
+                </div>
+                <div class="example-title">🔁 For loop example</div>
+                <pre><code>for i in range(3):
+    print(f"Attempt {i+1}")</code></pre>
+                <div class="example-title">♾️ While loop + break</div>
+                <pre><code>count = 0
+while count < 5:
+    print(count)
+    count += 1
+    if count == 3: break   # stops early</code></pre>
+            </div>
+        </div>
+
+        <!-- break, continue, pass -->
+        <div class="card">
+            <div class="card-header"><span>⏸️</span> break · continue · pass</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — <code>break</code> exits loop, <code>continue</code> skips iteration, <code>pass</code> does nothing (placeholder).<br>
+                    <strong>💡 WHY</strong> — Fine-tune loop behavior, avoid errors in stubs.<br>
+                    <strong>📍 WHERE</strong> — Search algorithms, input sanitization, early exit.
+                </div>
+                <pre><code>for num in range(6):
+    if num == 0:
+        continue     # skip 0
+    if num == 4:
+        break        # stop at 4
+    print(num)       # 1,2,3
+
+# pass as placeholder:
+def future_function():
+    pass</code></pre>
+                <div class="output-demo">🎯 continue → jump to next iteration | break → terminate loop immediately.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TWO COMPLETE EXAMPLES with What/Why/How/Where -->
+    <div style="margin-bottom: 2rem;">
+        <div class="card" style="margin-bottom: 1.8rem;">
+            <div class="card-header"><span>📘 EXAMPLE 1</span> — Login System with Retry (while + if/else + break)</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — A program that asks for password with limited attempts.<br>
+                    <strong>💡 WHY</strong> — Shows while loop, conditionals, and break in a realistic security scenario.<br>
+                    <strong>📍 WHERE</strong> — Authentication gates, admin panels, rate limiting.<br>
+                    <strong>⚙️ HOW</strong> — Uses max 3 attempts, break on success, else block runs if exhausted.
+                </div>
+                <pre><code># Example 1: Secure Access (while + if/else)
+correct_password = "py123"
+max_attempts = 3
+attempt = 0
+
+while attempt < max_attempts:
+    pwd = input("Enter password: ")
+    if pwd == correct_password:
+        print("✅ Access granted!")
+        break
+    else:
+        attempt += 1
+        left = max_attempts - attempt
+        if left > 0:
+            print(f"❌ Wrong! {left} attempts left.")
+        else:
+            print("🔒 Account locked.")
+            break</code></pre>
+                <button class="btn-run" id="runLoginDemo">▶ Run Login Demo (simulated)</button>
+                <div id="loginOutput" class="output-demo" style="margin-top: 12px;">💡 Click to simulate password prompt (correct: py123)</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><span>📘 EXAMPLE 2</span> — Sum of Even Numbers (for + continue)</div>
+            <div class="card-body">
+                <div class="what-why-where">
+                    <strong>📌 WHAT</strong> — Sums only even numbers from 1 to N using <code>continue</code> to skip odds.<br>
+                    <strong>💡 WHY</strong> — Demonstrates loop filtering, use of modulo, and accumulator pattern.<br>
+                    <strong>📍 WHERE</strong> — Data preprocessing, statistical calculations, game scoring.<br>
+                    <strong>⚙️ HOW</strong> — For loop from 1 to N, if odd → continue, else add to total.
+                </div>
+                <pre><code># Example 2: Even number summer (continue usage)
+N = 10
+total = 0
+for num in range(1, N+1):
+    if num % 2 != 0:   # odd
+        continue
+    total += num
+print(f"Sum of evens 1..{N} = {total}")   # 2+4+6+8+10 = 30</code></pre>
+                <button class="btn-run" id="runEvenSumDemo">▶ Run Even Sum Example</button>
+                <div id="evenOutput" class="output-demo" style="margin-top: 12px;">💡 Output will appear here</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTERACTIVE NUMBER GUESSING GAME (Exercise) -->
+    <div class="game-area">
+        <div class="game-title">
+            🎲 Number Guessing Game
+            <span style="font-size: 0.9rem; background: #e2eef9; padding: 4px 12px; border-radius: 30px;">Exercise: while loop + conditionals</span>
+        </div>
+        <p>🤖 I'm thinking of a number between <strong>1 and 100</strong>. Can you guess it?<br>
+        Uses <code>while</code> loop, <code>if/elif/else</code>, <code>break</code> on correct guess & <code>continue</code> to skip invalid. Perfect control flow demo!</p>
+        <div class="guess-input">
+            <input type="number" id="guessField" placeholder="Enter your guess (1-100)" min="1" max="100">
+            <button id="guessBtn">🔍 Guess</button>
+            <button id="resetGameBtn" class="reset-btn">🔄 New Game</button>
+        </div>
+        <div id="gameFeedback" class="game-feedback">
+            💡 Start guessing! The game will give hints: Too low / Too high / Correct!
+        </div>
+        <div style="margin-top: 12px; font-size: 0.8rem;">
+            📌 <strong>What, Why, How:</strong> This game uses a <strong>while True</strong> loop with break upon correct guess, 
+            conditionals (if/elif) to compare numbers, and input validation. It mimics real-world guessing mechanics.
+        </div>
+    </div>
+    
+    <footer>
+        🧠 Day 3–4 Mastery: Conditional statements (if-elif-else), for/while loops, break/continue/pass.<br>
+        🔥 Two full examples + Interactive Number Guessing Game (classic exercise). Learn by playing!
+    </footer>
+</div>
+
+<script>
+    // ---- Helper Simulated prompts for examples ----
+    function simulatePrompt(message, defaultValue = "") {
+        let val = prompt(message, defaultValue);
+        if (val === null) return "";
+        return val;
+    }
+
+    // Example 1: Login with attempts (simulated)
+    document.getElementById("runLoginDemo").addEventListener("click", () => {
+        const correctPassword = "py123";
+        let attemptsLeft = 3;
+        let granted = false;
+        let outputLog = "";
+        
+        // We simulate series of prompts, but because alert/prompt can be blocking, we do interactive simulation:
+        // For better UX, we simulate step by step using a loop but prompt inside can be messy.
+        // Better approach: recursive-like but simple while simulation with custom prompts.
+        function simulateLogin(remaining) {
+            if (remaining <= 0) {
+                outputLog += "🔒 Account locked due to many failed attempts.\n";
+                document.getElementById("loginOutput").innerHTML = `<strong>▶ Demo Output:</strong><br><pre style="background:#0e1e2a;color:#cff4fc;padding:8px;border-radius:10px;">${escapeHtml(outputLog)}</pre>`;
+                return;
+            }
+            let pwd = prompt(`Enter password (${remaining} attempts left):`, "");
+            if (pwd === null) {
+                outputLog += "⏹️ Login cancelled.\n";
+                document.getElementById("loginOutput").innerHTML = `<strong>▶ Demo Output:</strong><br><pre style="background:#0e1e2a;color:#cff4fc;">${escapeHtml(outputLog)}</pre>`;
+                return;
+            }
+            if (pwd === correctPassword) {
+                outputLog += "✅ Access granted! Welcome.\n";
+                document.getElementById("loginOutput").innerHTML = `<strong>▶ Demo Output:</strong><br><pre style="background:#0e1e2a;color:#cff4fc;">${escapeHtml(outputLog)}</pre>`;
+                return;
+            } else {
+                outputLog += `❌ Wrong password! ${remaining-1} attempts left.\n`;
+                simulateLogin(remaining - 1);
+            }
+        }
+        outputLog = "🔐 Starting login simulation...\n";
+        simulateLogin(3);
+    });
+    
+    // Example 2: Even Sum with continue
+    document.getElementById("runEvenSumDemo").addEventListener("click", () => {
+        const N = 10;
+        let total = 0;
+        let steps = [];
+        for (let num = 1; num <= N; num++) {
+            if (num % 2 !== 0) {
+                steps.push(`${num} is odd → continue`);
+                continue;
+            }
+            total += num;
+            steps.push(`${num} is even → added, sum now ${total}`);
+        }
+        const finalMsg = `Sum of evens 1..${N} = ${total} (2+4+6+8+10 = 30)`;
+        const displayText = steps.join("\n") + "\n\n✨ " + finalMsg;
+        document.getElementById("evenOutput").innerHTML = `<strong>▶ Output (continue demo):</strong><br><pre style="background:#0e1e2a;color:#d4f1f9;border-radius:12px;padding:8px;">${escapeHtml(displayText)}</pre>`;
+    });
+    
+    // Escape helper
+    function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    // ---------- NUMBER GUESSING GAME ----------
+    let secretNumber = Math.floor(Math.random() * 100) + 1;
+    let guessCount = 0;
+    let gameActive = true;
+    
+    const guessInput = document.getElementById("guessField");
+    const guessBtn = document.getElementById("guessBtn");
+    const resetBtn = document.getElementById("resetGameBtn");
+    const gameFeedback = document.getElementById("gameFeedback");
+    
+    function updateFeedback(msg, isError = false) {
+        gameFeedback.innerHTML = msg;
+        gameFeedback.style.background = isError ? "#2d2a2e" : "#0e2a2f";
+    }
+    
+    function resetGame() {
+        secretNumber = Math.floor(Math.random() * 100) + 1;
+        guessCount = 0;
+        gameActive = true;
+        guessInput.value = "";
+        guessInput.disabled = false;
+        guessBtn.disabled = false;
+        updateFeedback("🔄 New game! I've picked a number between 1 and 100. Start guessing 🎯", false);
+    }
+    
+    function handleGuess() {
+        if (!gameActive) {
+            updateFeedback("⛔ The game is over! Press 'New Game' to play again.", true);
+            return;
+        }
+        const rawValue = guessInput.value.trim();
+        if (rawValue === "") {
+            updateFeedback("⚠️ Please enter a number!", true);
+            return;
+        }
+        const guess = Number(rawValue);
+        if (isNaN(guess) || !Number.isInteger(guess) || guess < 1 || guess > 100) {
+            updateFeedback("❌ Invalid input! Please enter an integer between 1 and 100.", true);
+            guessInput.value = "";
+            return;
+        }
+        guessCount++;
+        
+        // if / elif / else logic
+        if (guess === secretNumber) {
+            updateFeedback(`🎉 CORRECT! The number was ${secretNumber}. You got it in ${guessCount} ${guessCount === 1 ? "guess" : "guesses"}! 🏆 Game won. Press "New Game" to play again.`);
+            gameActive = false;
+            guessInput.disabled = true;
+            guessBtn.disabled = true;
+        } else if (guess < secretNumber) {
+            updateFeedback(`📉 Too low! ${guess} is below the secret number. Attempts: ${guessCount}. Keep going!`);
+            guessInput.value = "";
+        } else {
+            updateFeedback(`📈 Too high! ${guess} is above the secret number. Attempts: ${guessCount}. Try again.`);
+            guessInput.value = "";
+        }
+        // optional focus
+        if (gameActive) guessInput.focus();
+    }
+    
+    guessBtn.addEventListener("click", handleGuess);
+    resetBtn.addEventListener("click", () => {
+        resetGame();
+        guessInput.disabled = false;
+        guessBtn.disabled = false;
+        gameActive = true;
+        guessInput.focus();
+    });
+    
+    guessInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            if (gameActive) handleGuess();
+        }
+    });
+    
+    // initial focus
+    guessInput.focus();
+    
+    // Additional info: show mini control-flow hint
+    console.log("Control Flow Day 3-4 ready: conditionals, loops, break/continue/pass + guess game");
+</script>
+</body>
+</html>
